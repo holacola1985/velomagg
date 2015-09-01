@@ -1,0 +1,80 @@
+.fullsize() {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+#map {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+}
+
+@keyframes digitPop{
+  0%{
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  60%{
+    opacity: 1;
+  }
+  100%{
+    transform: translateY(-15px);
+    opacity: 0;
+  }
+}
+
+@width: 45px;
+
+.station-marker {
+  position: absolute;
+  margin: -@width/2 0 0 -@width/2;
+  width: @width;
+  height: @width;
+
+  .text, canvas {
+    position: absolute;
+    width: @width;
+    height: @width;
+  }
+
+  .text {
+    font-weight: 600;
+    color: #6d3e91;
+    text-align: center;
+    line-height: @width;
+  }
+
+  .in, .out {
+    position: absolute;
+    width: @width * 2;
+    margin: -20px 0 0 -@width/2;
+    text-align: center;
+    display: none;
+
+    .change {
+      font-size: 18px;
+      animation: 0.8s digitPop both;
+    }
+
+    .bike {
+      font-size: 22px;
+    }
+  }
+
+  .in {
+    color: #95c11f;
+  }
+
+  .out {
+    color: #ea5b0c;
+  }
+}

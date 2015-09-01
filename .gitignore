@@ -33,3 +33,6 @@ public/css/*.map
 public/js/*.js
 nginx.conf
 config/*.json
+
+# linked directories from lightstream
+app/node
