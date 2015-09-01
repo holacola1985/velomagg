@@ -1,0 +1,11 @@
+[{
+  "name": "websocket",
+  "script": "app/node/server.js",
+  "instances": "max",
+  "exec_mode": "cluster_mode"
+}, {
+  "name": "api",
+  "script": "app/node/api.js",
+  "instances": "max",
+  "exec_mode": "cluster_mode"
+}]
