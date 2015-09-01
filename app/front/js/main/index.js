@@ -7,15 +7,13 @@ Backbone.$ = $;
 
 var BackboneLayer = require('leaflet-backbone-layer').BackboneLayer;
 var MapboxSocket = require('lightstream-socket').MapboxSocket;
-var ItemBackboneModel = require('../lib/ItemBackboneModel');
+var VelomaggStation = require('lightstream-backbone').ItemBackboneModel;
 var StationMarker = require('./StationMarker');
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiZnJhbmNrZXJuZXdlaW4iLCJhIjoiYXJLM0dISSJ9.mod0ppb2kjzuMy8j1pl0Bw';
 L.mapbox.config.FORCE_HTTPS = true;
 L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
 var map;
-
-var VelomaggStation = ItemBackboneModel.extend({});
 
 var Collection = Backbone.Collection.extend({
   model: VelomaggStation

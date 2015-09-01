@@ -29,7 +29,7 @@
   "dependencies": {
     "backbone": "^1.2.2",
     "bootstrap": "^3.3.5",
-    "generator-lightstream-config": "^0.1.0",
+    "generator-lightstream-config": "latest",
     "grunt": "^0.4.5",
     "grunt-browserify": "^4.0.0",
     "grunt-contrib-less": "^1.0.1",
@@ -38,8 +38,9 @@
     "handlebars": "^4.0.0",
     "hbsfy": "^2.2.1",
     "jquery": "^2.1.4",
-    "leaflet-backbone-layer": "^0.1.4",
-    "lightstream-socket": "^0.3.1",
+    "leaflet-backbone-layer": "latest",
+    "lightstream-backbone": "latest",
+    "lightstream-socket": "latest",
     "lodash": "^3.10.1",
     "mapbox.js": "^2.2.1"
   }

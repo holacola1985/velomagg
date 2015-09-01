@@ -2,7 +2,7 @@
 "use strict";
 
 var Backbone = require('backbone');
-var Station = require('../lib/ItemBackboneModel');
+var Station = require('lightstream-backbone').ItemBackboneModel;
 
 var Velomagg = Backbone.Collection.extend({
   model: Station,
