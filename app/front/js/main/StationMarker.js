@@ -2,6 +2,8 @@
 "use strict";
 
 var AbstractBackboneMarker = require('leaflet-backbone-layer').AbstractBackboneMarker;
+var renderPopup = require('./popup.hbs');
+var L = window.L;
 
 var template = '' +
   '<canvas></canvas>' +
@@ -15,6 +17,9 @@ var template = '' +
 
 var StationMarker = AbstractBackboneMarker.extend({
   className: 'station-marker',
+  events: {
+    click: 'onClick'
+  },
   station: function () {
     return this.model.toJSON().data;
   },
@@ -34,15 +39,19 @@ var StationMarker = AbstractBackboneMarker.extend({
     return template;
   },
   render: function () {
+    this.popup = L.popup({
+      className: 'station-popup',
+      offset: L.point(0, -10)
+    });
     AbstractBackboneMarker.prototype.render.call(this);
-    this.$in = this.$('div.in');
-    this.$out = this.$('div.out');
   },
-  rerender: function () {
+  renderElements: function () {
     this.renderText();
     this.renderIndicator();
-    this.setPosition();
-    this.animate();
+    this.renderPopup();
+
+    this.$in = this.$('div.in');
+    this.$out = this.$('div.out');
   },
   renderText: function () {
     this.$('div.text').html(this.text());
@@ -52,11 +61,23 @@ var StationMarker = AbstractBackboneMarker.extend({
     this.indicator = new Indicator(canvas, 0.7);
     this.indicator.render(this.bikePercentage());
   },
+  renderPopup: function () {
+    this.popup
+      .setLatLng(this.model.coordinates())
+      .setContent(renderPopup(this.model.toJSON()));
+  },
   resetCanvas: function () {
     var canvas = this.$('canvas')[0];
     canvas.width = this.$el.width();
     canvas.height = this.$el.height();
     return canvas;
+  },
+  onClick: function (event) {
+    event.stopPropagation();
+    this.openPopup();
+  },
+  openPopup: function () {
+    this.popup.openOn(this.map);
   },
   animate: function () {
     var change = this.bikesChange();
