@@ -37,11 +37,16 @@
     "grunt-contrib-watch": "^0.6.1",
     "handlebars": "^4.0.0",
     "hbsfy": "^2.2.1",
+    "iconv-lite": "^0.4.11",
     "jquery": "^2.1.4",
     "leaflet-backbone-layer": "latest",
     "lightstream-backbone": "latest",
     "lightstream-socket": "latest",
     "lodash": "^3.10.1",
-    "mapbox.js": "^2.2.1"
+    "mapbox.js": "^2.2.1",
+    "promise": "^7.0.3",
+    "request": "^2.58.0",
+    "rx": "^2.5.3",
+    "xml2js": "^0.4.9"
   }
 }
