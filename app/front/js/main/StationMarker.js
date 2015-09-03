@@ -9,10 +9,16 @@ var template = '' +
   '<canvas></canvas>' +
   '<div class="text"></div>' +
   '<div class="in">' +
-  ' <span class="change">+1</span>' +
+  '  <span class="change">' +
+  '    +<span class="count">1</span> ' +
+  '    <span class="bike fa fa-bicycle"></span>' +
+  '  </span>' +
   '</div>' +
   '<div class="out">' +
-  ' <span class="change">-1</span>' +
+  '   <span class="change">' +
+  '    <span class="count">1</span> ' +
+  '    <span class="bike fa fa-bicycle"></span>' +
+  '  </span>' +
   '</div>';
 
 var StationMarker = AbstractBackboneMarker.extend({
@@ -44,14 +50,13 @@ var StationMarker = AbstractBackboneMarker.extend({
       offset: L.point(0, -10)
     });
     AbstractBackboneMarker.prototype.render.call(this);
+    this.$in = this.$('div.in');
+    this.$out = this.$('div.out');
   },
   renderElements: function () {
     this.renderText();
     this.renderIndicator();
     this.renderPopup();
-
-    this.$in = this.$('div.in');
-    this.$out = this.$('div.out');
   },
   renderText: function () {
     this.$('div.text').html(this.text());
@@ -87,10 +92,9 @@ var StationMarker = AbstractBackboneMarker.extend({
 
     var div_to_display = change > 0 ? this.$in : this.$out;
     var div_to_hide = change > 0 ? this.$out : this.$in;
-    var sign = change > 0 ? '+' : '';
 
     div_to_hide.hide();
-    div_to_display.find('.change').html(sign + change + ' <span class="bike fa fa-bicycle"></span>');
+    div_to_display.find('.count').html(change);
     div_to_display.show();
     setTimeout(function(){
       div_to_display.hide();
