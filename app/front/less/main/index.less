@@ -33,6 +33,9 @@ body {
 }
 
 @width: 45px;
+@purple: #6d3e91;
+@green: #95c11f;
+@orange: #ea5b0c;
 
 .station-marker {
   position: absolute;
@@ -48,7 +51,7 @@ body {
 
   .text {
     font-weight: 600;
-    color: #6d3e91;
+    color: @purple;
     text-align: center;
     line-height: @width;
   }
@@ -71,10 +74,46 @@ body {
   }
 
   .in {
-    color: #95c11f;
+    color: @green;
   }
 
   .out {
-    color: #ea5b0c;
+    color: @orange;
+  }
+}
+
+.station-popup {
+
+  .leaflet-popup-content-wrapper {
+    background: url('../img/popup.png') no-repeat 0 0;
+    width: 200px !important;
+    height: 155px;
+    padding: 10px 0 0 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,.4);
+
+    h3 {
+      background: url('../img/logo_3m.jpg') no-repeat left center;
+      padding-left: 30px !important;
+    }
+
+    ul {
+      padding-left: 30px;
+
+      li.available-bikes {
+        color: @green;
+      }
+
+      li.free-slots {
+        color: @orange;
+      }
+
+      li.total {
+        color: @purple;
+      }
+    }
+  }
+
+  .leaflet-popup-tip {
+    border-top-color: #6d3e91;
   }
 }
