@@ -73,7 +73,7 @@ function sendToLightstream(station) {
       throw new Error(response.statusCode + ' : ' + (response.body.message || 'unknown error'))
     }
     stations[station.id] = station;
-    console.log('station updated: ' + station.id);
+    //console.log('station updated: ' + station.id);
   }).catch(function (error) {
     console.log(error);
   });
@@ -87,12 +87,12 @@ parser.addListener('end', function(result) {
 });
 
 setInterval(function () {
-  console.log('loading...');
+  //console.log('loading...');
   get({
     url: config.velomagg_url,
     encoding: null
   }).then(function (response) {
-    console.log('response loaded.');
+    //console.log('response loaded.');
     if (response.statusCode === 200) {
       parser.parseString(iconv.decode(response.body, 'win1252'));
     }
