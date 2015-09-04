@@ -20,12 +20,11 @@ var Collection = Backbone.Collection.extend({
 });
 
 function createMarker(options) {
-    return new StationMarker(options);
+  return new StationMarker(options);
 }
 
 var options = {
-  max_retries: 2,
-  retry_interval: 2000
+  retry_interval: 5000
 };
 var socket = new MapboxSocket('ws://' + config.hostname + '/socket/', 'station', options);
 var collection = new Collection();
