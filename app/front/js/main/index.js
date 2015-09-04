@@ -20,7 +20,7 @@ var Collection = Backbone.Collection.extend({
 });
 
 function createMarker(options) {
-  return new StationMarker(options);
+    return new StationMarker(options);
 }
 
 var options = {
@@ -36,7 +36,7 @@ socket.on('opened', function () {
 
 function initializeMap(socket, collection) {
   var map = L.mapbox.map('map', 'mapbox.light')
-    .setView([43.6, 3.91], 13);
+    .setView([43.605, 3.88], 14);
   socket.attachMap(map);
 
   var layer = new BackboneLayer(collection, createMarker);

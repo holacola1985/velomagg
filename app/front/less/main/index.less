@@ -11,11 +11,7 @@ body {
 }
 
 #map {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  width: 100%;
-  bottom: 0;
+  .fullsize();
 }
 
 @keyframes digitPop{
@@ -59,9 +55,12 @@ body {
   .in, .out {
     position: absolute;
     width: @width * 2;
-    margin: -20px 0 0 -@width/2;
+    left: 50%;
+    top: 0;
+    margin: -20px 0 0 -@width;
     text-align: center;
     display: none;
+    z-index: 10;
 
     .change {
       font-size: 18px;
@@ -116,4 +115,8 @@ body {
   .leaflet-popup-tip {
     border-top-color: #6d3e91;
   }
+}
+
+.leaflet-control-attribution {
+  display: none;
 }

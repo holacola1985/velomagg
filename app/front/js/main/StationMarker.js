@@ -1,9 +1,10 @@
 /* jslint node: true */
 "use strict";
 
+var L = window.L;
 var AbstractBackboneMarker = require('leaflet-backbone-layer').AbstractBackboneMarker;
 var renderPopup = require('./popup.hbs');
-var L = window.L;
+var Indicator = require('./Indicator');
 
 var template = '' +
   '<canvas></canvas>' +
@@ -21,10 +22,38 @@ var template = '' +
   '  </span>' +
   '</div>';
 
+var zoom_factor = {
+  14: 1,
+  13: 0.6,
+  12: 0.5,
+  11: 0.45,
+  10: 0.4,
+  9: 0.35,
+  8: 0.3,
+  7: 0.3,
+  6: 0.25,
+  5: 0.25,
+  4: 0.25,
+  3: 0.2,
+  2: 0.2,
+  1: 0.2
+};
+
 var StationMarker = AbstractBackboneMarker.extend({
   className: 'station-marker',
   events: {
     click: 'onClick'
+  },
+  initialize: function (options) {
+    AbstractBackboneMarker.prototype.initialize.call(this, options);
+    this.initial_size = {
+      height: this.$el.height(),
+      width: this.$el.width()
+    };
+    this.popup = L.popup({
+      className: 'station-popup',
+      offset: L.point(0, -10)
+    });
   },
   station: function () {
     return this.model.toJSON().data;
@@ -44,26 +73,34 @@ var StationMarker = AbstractBackboneMarker.extend({
   applyTemplate: function () {
     return template;
   },
-  render: function () {
-    this.popup = L.popup({
-      className: 'station-popup',
-      offset: L.point(0, -10)
-    });
-    AbstractBackboneMarker.prototype.render.call(this);
-    this.$in = this.$('div.in');
-    this.$out = this.$('div.out');
-  },
   renderElements: function () {
+    this.defineScalingFactor();
+    this.resizeRootElement();
     this.renderText();
     this.renderIndicator();
     this.renderPopup();
   },
+  defineScalingFactor: function () {
+    this.scaling_factor = zoom_factor[Math.min(14, this.map.getZoom())];
+  },
+  resizeRootElement: function () {
+    this.$el.height(this.initial_size.height * this.scaling_factor);
+    this.$el.width(this.initial_size.width * this.scaling_factor);
+    this.$el.css('margin-top', -this.initial_size.height * this.scaling_factor / 2);
+    this.$el.css('margin-left', -this.initial_size.width * this.scaling_factor / 2);
+  },
   renderText: function () {
-    this.$('div.text').html(this.text());
+    this.$text = this.$text || this.$('div.text');
+    if (this.scaling_factor < 1) {
+      this.$text.hide();
+    } else {
+      this.$text.html(this.text());
+      this.$text.show();
+    }
   },
   renderIndicator: function () {
-    var canvas = this.resetCanvas();
-    this.indicator = new Indicator(canvas, 0.7);
+    this.resizeCanvas();
+    this.indicator = new Indicator(this.$canvas[0]);
     this.indicator.render(this.bikePercentage());
   },
   renderPopup: function () {
@@ -71,11 +108,15 @@ var StationMarker = AbstractBackboneMarker.extend({
       .setLatLng(this.model.coordinates())
       .setContent(renderPopup(this.model.toJSON()));
   },
-  resetCanvas: function () {
-    var canvas = this.$('canvas')[0];
-    canvas.width = this.$el.width();
-    canvas.height = this.$el.height();
-    return canvas;
+  resizeCanvas: function () {
+    this.$canvas = this.$canvas || this.$('canvas');
+    this.$canvas[0].width = this.$el.width();
+    this.$canvas[0].height = this.$el.height();
+    this.$canvas.width(this.$el.width());
+    this.$canvas.height(this.$el.height());
+  },
+  reset: function () {
+    this.refreshRendering();
   },
   onClick: function (event) {
     event.stopPropagation();
@@ -89,6 +130,8 @@ var StationMarker = AbstractBackboneMarker.extend({
     if (!change) {
       return;
     }
+    this.$in = this.$in || this.$('div.in');
+    this.$out = this.$out || this.$('div.out');
 
     var div_to_display = change > 0 ? this.$in : this.$out;
     var div_to_hide = change > 0 ? this.$out : this.$in;
@@ -101,32 +144,5 @@ var StationMarker = AbstractBackboneMarker.extend({
     }, 1500);
   }
 });
-
-var Indicator = (function () {
-  return function (canvas, radius_rate) {
-    var centerX = canvas.width / 2;
-    var centerY = canvas.height / 2;
-    var outer_radius = Math.min(centerX, centerY);
-    var inner_radius = Math.max(outer_radius * radius_rate, 3);
-
-    var context = canvas.getContext('2d');
-
-    function drawArc(color, radius, start, end) {
-      context.fillStyle = color;
-      context.beginPath();
-      context.moveTo(centerX, centerY);
-      context.arc(centerX, centerY, radius, start || 0, end || 2 * Math.PI, false);
-      context.fill();
-      context.closePath();
-    }
-
-    this.render = function render(percentage) {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      drawArc('#ea5b0c', outer_radius);
-      drawArc('#95c11f', outer_radius, 1.5 * Math.PI, (1.5 + 2 * percentage) * Math.PI);
-      drawArc('#ffffff', inner_radius);
-    };
-  }
-})();
 
 module.exports = StationMarker;
