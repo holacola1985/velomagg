@@ -99,6 +99,7 @@ var StationMarker = AbstractBackboneMarker.extend({
     }
   },
   renderIndicator: function () {
+    this.$canvas = this.$canvas || this.$('canvas');
     this.resizeCanvas();
     this.indicator = new Indicator(this.$canvas[0]);
     this.indicator.render(this.bikePercentage());
@@ -109,14 +110,14 @@ var StationMarker = AbstractBackboneMarker.extend({
       .setContent(renderPopup(this.model.toJSON()));
   },
   resizeCanvas: function () {
-    this.$canvas = this.$canvas || this.$('canvas');
     this.$canvas[0].width = this.$el.width();
     this.$canvas[0].height = this.$el.height();
     this.$canvas.width(this.$el.width());
     this.$canvas.height(this.$el.height());
   },
   reset: function () {
-    this.refreshRendering();
+    this.renderElements();
+    this.setPosition();
   },
   onClick: function (event) {
     event.stopPropagation();
