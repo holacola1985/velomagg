@@ -81,6 +81,37 @@ body {
   }
 }
 
+.position {
+  font-size: 30px;
+  color: @purple;
+}
+
+.leaflet-control-command {
+  background-color: white;
+  //opacity: 0.7;
+  border-radius: 6px;
+  padding: 5px 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,.5);
+
+  ul {
+    padding: 0px;
+    margin: 0px;
+    list-style-type: none;
+  }
+}
+
+li.available-bikes {
+  color: @green;
+}
+
+li.free-slots {
+  color: @orange;
+}
+
+li.total {
+  color: @purple;
+}
+
 .station-popup {
 
   .leaflet-popup-content-wrapper {
@@ -97,18 +128,6 @@ body {
 
     ul {
       padding-left: 30px;
-
-      li.available-bikes {
-        color: @green;
-      }
-
-      li.free-slots {
-        color: @orange;
-      }
-
-      li.total {
-        color: @purple;
-      }
     }
   }
 
