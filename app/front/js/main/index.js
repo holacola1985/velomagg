@@ -4,6 +4,7 @@ var L = window.L;
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
+var querystring = require('querystring');
 
 var BackboneLayer = require('leaflet-backbone-layer').BackboneLayer;
 var MapboxSocket = require('lightstream-socket').MapboxSocket;
@@ -31,7 +32,8 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
 
   function initializeMap() {
     //test : 43.607653, 3.881696
-    return L.mapbox.map('map', 'mapbox.light')
+    var map_type = querystring.parse(document.location.search.replace('?', '')).map;
+    return L.mapbox.map('map', 'mapbox.' + (map_type || 'light'))
       .setView([43.605, 3.88], 14);
   }
 
@@ -81,13 +83,17 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
     navigator.geolocation.watchPosition(localizeUser, console.log, options);
   }
 
+  function userIsCloseEnoughFromAStation(latitude, longitude) {
+    //bounding box : NE:43.67 3.99, SW:43.56 3.77
+    return latitude <= 43.67 && latitude >= 43.56 &&
+      longitude <= 3.99 && longitude >= 3.77;
+  }
+
   function localizeUser(geo) {
     var latitude = geo.coords.latitude;
     var longitude = geo.coords.longitude;
 
-    //bounding box : NE:43.67 3.99, SW:43.56 3.77
-    if (latitude <= 43.67 && latitude >= 43.56 &&
-      longitude <= 3.99 && longitude >= 3.77) {
+    if (userIsCloseEnoughFromAStation(latitude, longitude)) {
       var current_position = [latitude, longitude];
       map.setView(current_position, 16);
       position_marker = position_marker || initializePositionMarker(map, velomagg);
