@@ -23,11 +23,11 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
   var map_not_attached = true;
   var position_marker;
 
-  var stations = new Collection();
+  var velomagg = new Collection();
   var map = initializeMap();
-  createLayer(map, stations);
+  createLayer(map, velomagg);
   watchPosition();
-  openSocket(map, stations);
+  openSocket(map, velomagg);
 
   function initializeMap() {
     //test : 43.607653, 3.881696
@@ -35,16 +35,16 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
       .setView([43.605, 3.88], 14);
   }
 
-  function createLayer(map, stations) {
+  function createLayer(map, velomagg) {
     function createMarker(options) {
       return new StationMarker(options);
     }
 
-    var layer = new BackboneLayer(stations, createMarker);
+    var layer = new BackboneLayer(velomagg, createMarker);
     map.addLayer(layer);
   }
 
-  function openSocket(map, stations) {
+  function openSocket(map, velomagg) {
     var options = {
       retry_interval: 5000
     };
@@ -58,7 +58,7 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
     });
 
     socket.on('new_items', function (stations) {
-      stations.set(stations, { remove:false });
+      velomagg.set(stations, { remove:false });
     });
 
     socket.on('error', function (error) {
@@ -90,23 +90,23 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
       longitude <= 3.99 && longitude >= 3.77) {
       var current_position = [latitude, longitude];
       map.setView(current_position, 16);
-      position_marker = position_marker || initializePositionMarker(map, stations);
+      position_marker = position_marker || initializePositionMarker(map, velomagg);
       position_marker.updatePosition(current_position);
     }
   }
 
-  function initializePositionMarker(map, stations) {
+  function initializePositionMarker(map, velomagg) {
     var marker = new PositionMarker();
     marker.addTo(map);
     var control = new ClosestStationsControl();
     control.addTo(map);
 
     function updateControl() {
-      control.update(stations, marker.getPosition())
+      control.update(velomagg, marker.getPosition())
     }
 
     marker.on('move', updateControl);
-    stations.on('update', updateControl);
+    velomagg.on('update', updateControl);
 
     return marker;
   }
