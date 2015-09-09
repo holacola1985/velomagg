@@ -47,7 +47,7 @@ function mapStation(si) {
 
 function filterStation(station) {
   fakeData(station);
-  return !_.isEqual(stations[station.id], station, function (value, other) {
+  return station.name && !_.isEqual(stations[station.id], station, function (value, other) {
     if (/\d{4}-\d{2}-\d{2}/g.test(value)) {
       return true;
     }
