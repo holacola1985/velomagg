@@ -47,7 +47,7 @@ function mapStation(si) {
 
 function filterStation(station) {
   fakeData(station);
-  return station.name && !_.isEqual(stations[station.id], station, function (value, other) {
+  return station.name && !_.isEqual(stations[station.id], station, function (value) {
     if (/\d{4}-\d{2}-\d{2}/g.test(value)) {
       return true;
     }
@@ -70,7 +70,7 @@ function sendToLightstream(station) {
     json: true
   }).then(function (response) {
     if (response.statusCode !== 200) {
-      throw new Error(response.statusCode + ' : ' + (response.body.message || 'unknown error'))
+      throw new Error(response.statusCode + ' : ' + (response.body.message || 'unknown error'));
     }
     stations[station.id] = station;
     //console.log('station updated: ' + station.id);
