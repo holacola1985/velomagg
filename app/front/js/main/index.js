@@ -1,3 +1,4 @@
+'use strict';
 var config = require('../../../../config/public.json');
 require('mapbox.js');
 var L = window.L;
@@ -80,7 +81,7 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
       timeout: 5000,
       maximumAge: 0
     };
-    navigator.geolocation.watchPosition(localizeUser, console.log, options);
+    window.navigator.geolocation.watchPosition(localizeUser, console.log, options);
   }
 
   function userIsCloseEnoughFromAStation(latitude, longitude) {
@@ -108,7 +109,7 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
     control.addTo(map);
 
     function updateControl() {
-      control.update(velomagg, marker.getPosition())
+      control.update(velomagg, marker.getPosition());
     }
 
     marker.on('move', updateControl);
