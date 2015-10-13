@@ -2,8 +2,7 @@
 import querystring from 'querystring';
 import React from 'react';
 import _ from 'lodash';
-import { Map, Layer, MapboxLayer, Marker, Popup }
-from 'mapbox-react';
+import { Map, Layer, MapboxLayer, Marker, Popup } from 'mapbox-react';
 import Circle from './Circle.jsx';
 
 class VeloMap extends React.Component {
@@ -16,12 +15,19 @@ class VeloMap extends React.Component {
 
   constructor(props) {
     super(props);
-    this.updateState = _.throttle(() => {
+    this.onAddRemove = _.throttle(() => {
       this.setState({
         collection: props.collection.toJSON()
       });
     }, 50);
-    this.props.collection.on('change add remove', this.updateState);
+    this.onChange = () => {
+      console.log('change');
+      this.setState({
+        collection: props.collection.toJSON()
+      });
+    };
+    this.props.collection.on('add remove', this.onAddRemove);
+    this.props.collection.on('change', this.onChange);
   }
 
   state = {
@@ -30,7 +36,8 @@ class VeloMap extends React.Component {
   };
 
   componentWillUnmount() {
-    this.props.collection.off('change add remove', this.updateState);
+    this.props.collection.off('add remove', this.onAddRemove);
+    this.props.collection.off('change', this.onChange);
   }
 
 
@@ -39,6 +46,7 @@ class VeloMap extends React.Component {
       <MapboxLayer url={this.state.mapboxLayer}/>
       <Layer interactive>
         {this.state.collection.map((model) => {
+          console.log(model.data.available_bikes, model.data.total);
           return <Marker key={model.id} geojson={model.geojson}>
             <div className="station-marker">
               <Circle value={model.data.available_bikes} total={model.data.total} />
@@ -49,7 +57,7 @@ class VeloMap extends React.Component {
               <ul>
                 <li className="available-bikes">{model.data.available_bikes} vélo(s) disponible(s)</li>
                 <li className="free-slots">{model.data.available_bikes} place(s) libre(s)</li>
-                <li className="total">{model.data.available_bikes} place(s) au total</li>
+                <li className="total">{model.data.total} place(s) au total</li>
               </ul>
             </Popup>
           </Marker>;

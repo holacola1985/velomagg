@@ -1,26 +1,33 @@
 'use strict';
 import React from 'react';
 import Indicator from './Indicator';
+import tween from 'tween.js';
 
 class Circle extends React.Component {
   static propTypes = {
     value: React.PropTypes.number,
     total: React.PropTypes.number
   }
-  state = {
-    value: this.props.value,
-    total: this.props.total
-  }
-  componentDidMount(){
+  componentDidMount() {
     let node = this.refs.canvas.getDOMNode();
     this.indicator = new Indicator(node);
-    this.draw();
+    this._state = {
+      percent: this.props.value / this.props.total
+    };
+    this.tween = new tween.Tween(this._state);
+    this.tween.onUpdate(() => {
+      this.draw();
+    });
   }
   componentDidUpdate() {
-    this.draw();
+    this.tween.stop();
+    this.tween.to({
+      percent: this.props.value / this.props.total
+    }, 250);
+    this.tween.start();
   }
-  draw(){
-    this.indicator.render(this.state.value / this.state.total);
+  draw() {
+    this.indicator.render(this._state.percent);
   }
   render() {
     return <canvas ref="canvas" width="45" height="45" />;
