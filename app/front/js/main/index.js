@@ -4,24 +4,26 @@ require('mapbox.js');
 var L = window.L;
 var $ = require('jquery');
 var Backbone = require('backbone');
+var React = require('react');
+var VeloMap = require('./VeloMap.jsx');
 Backbone.$ = $;
-var querystring = require('querystring');
+//
 
-var BackboneLayer = require('leaflet-backbone-layer').BackboneLayer;
+//var BackboneLayer = require('leaflet-backbone-layer').BackboneLayer;
 var MapboxSocket = require('lightstream-socket').MapboxSocket;
 var VelomaggStation = require('lightstream-backbone').ItemBackboneModel;
-var StationMarker = require('./StationMarker');
+//var StationMarker = require('./StationMarker');
 var Collection = Backbone.Collection.extend({
   model: VelomaggStation
 });
 var PositionMarker = require('./PositionMarker');
-var ClosestStationsControl = require('./ClosestStationsControl');
+//var ClosestStationsControl = require('./ClosestStationsControl');
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiZnJhbmNrZXJuZXdlaW4iLCJhIjoiYXJLM0dISSJ9.mod0ppb2kjzuMy8j1pl0Bw';
 L.mapbox.config.FORCE_HTTPS = true;
 L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
 
-(function (config) {
+(function(config) {
   var map_not_attached = true;
   var position_marker;
 
@@ -33,18 +35,23 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
 
   function initializeMap() {
     //test : 43.607653, 3.881696
-    var map_type = querystring.parse(document.location.search.replace('?', '')).map;
-    return L.mapbox.map('map', 'mapbox.' + (map_type || 'light'))
-      .setView([43.605, 3.88], 14);
+    return L.mapbox.map('map').setView([43.605, 3.88], 14);
   }
 
   function createLayer(map, velomagg) {
+    var mapElement = React.createElement(VeloMap, {
+      collection: velomagg,
+      map: map
+    });
+    React.render(mapElement, document.getElementById('map-component'));
+    /*
     function createMarker(options) {
       return new StationMarker(options);
     }
 
     var layer = new BackboneLayer(velomagg, createMarker);
     map.addLayer(layer);
+    */
   }
 
   function openSocket(map, velomagg) {
@@ -52,23 +59,25 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
       retry_interval: 5000
     };
     var socket = new MapboxSocket('ws://' + config.hostname + '/socket/', 'station', options);
+    //var socket = new Socket('ws://' + config.hostname + '/socket/', 'station', options);
 
-    socket.on('opened', function () {
+    socket.on('opened', function() {
       if (map_not_attached) {
         socket.attachMap(map);
         map_not_attached = true;
       }
     });
 
-    socket.on('new_items', function (stations) {
-      velomagg.set(stations, { remove:false });
+    socket.on('new_items', function(stations) {
+      console.log(stations.data.name);
+      velomagg.add(stations);
     });
 
-    socket.on('error', function (error) {
+    socket.on('error', function(error) {
       console.log('error in socket', error);
     });
 
-    socket.on('closed', function () {
+    socket.on('closed', function() {
       console.log('socket has been closed');
     });
 
@@ -96,14 +105,15 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
 
     if (userIsCloseEnoughFromAStation(latitude, longitude)) {
       var current_position = [latitude, longitude];
-      map.setView(current_position, 16);
+      //map.setView(current_position, 16);
       position_marker = position_marker || initializePositionMarker(map, velomagg);
       position_marker.updatePosition(current_position);
     }
   }
 
-  function initializePositionMarker(map, velomagg) {
+  function initializePositionMarker() {
     var marker = new PositionMarker();
+    /*
     marker.addTo(map);
     var control = new ClosestStationsControl();
     control.addTo(map);
@@ -114,6 +124,7 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
 
     marker.on('move', updateControl);
     velomagg.on('update', updateControl);
+    */
 
     return marker;
   }
