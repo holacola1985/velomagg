@@ -21,7 +21,6 @@ class VeloMap extends React.Component {
       });
     }, 50);
     this.onChange = () => {
-      console.log('change');
       this.setState({
         collection: props.collection.toJSON()
       });
@@ -46,7 +45,6 @@ class VeloMap extends React.Component {
       <MapboxLayer url={this.state.mapboxLayer}/>
       <Layer interactive>
         {this.state.collection.map((model) => {
-          console.log(model.data.available_bikes, model.data.total);
           return <Marker key={model.id} geojson={model.geojson}>
             <div className="station-marker">
               <Circle value={model.data.available_bikes} total={model.data.total} />

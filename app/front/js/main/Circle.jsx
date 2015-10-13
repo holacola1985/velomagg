@@ -15,9 +15,8 @@ class Circle extends React.Component {
       percent: this.props.value / this.props.total
     };
     this.tween = new tween.Tween(this._state);
-    this.tween.onUpdate(() => {
-      this.draw();
-    });
+    this.tween.onUpdate(this.draw.bind(this));
+    this.draw();
   }
   componentDidUpdate() {
     this.tween.stop();
