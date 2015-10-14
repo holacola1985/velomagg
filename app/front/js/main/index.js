@@ -67,9 +67,9 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
     });
 
     socket.on('new_items', function(stations) {
-      if(velomagg.length < 1){
+      //if(velomagg.length < 1){
         velomagg.add(stations);
-      }
+      //}
     });
 
     socket.on('error', function(error) {
@@ -119,10 +119,10 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
       data.available_bikes = _.random(data.total);
       station.set('data', data);
     }
-    setTimeout(fakeChange, 1000);
+    setTimeout(fakeChange, Math.random() * 2000);
   }
-
-  fakeChange();
+  //Uncomment to emulate changes
+  //fakeChange();
 
 
   function initializePositionMarker() {

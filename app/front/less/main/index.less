@@ -16,10 +16,14 @@ body {
 
 @keyframes digitPop{
   0%{
-    transform: translateY(0px);
+    transform: scale(0.1) translateY(30px);
+    opacity: 0;
+  }
+  15%{
+    transform: scale(1) translateY(10px);
     opacity: 1;
   }
-  60%{
+  80%{
     opacity: 1;
   }
   100%{
@@ -59,12 +63,20 @@ body {
     top: 0;
     margin: -20px 0 0 -@width;
     text-align: center;
-    display: none;
     z-index: 10;
 
     .change {
+      padding: 2px 3px;
       font-size: 18px;
-      animation: 0.8s digitPop both;
+      animation: 1.7s digitPop both;
+      background: rgba(255,255,255,0.8);
+      border-radius: 6px;
+      box-shadow: 0 0 3px rgba(0,0,0,0.3);
+      border: 1px solid white;
+      color: white;
+      .fa{
+        margin-bottom: -1px;
+      }
     }
 
     .bike {
@@ -72,12 +84,14 @@ body {
     }
   }
 
-  .in {
-    color: @green;
+  .in .change{
+    background: fade(@green, 90);
+    border: 1px solid @green;
   }
 
-  .out {
-    color: @orange;
+  .out .change{
+    background: fade(@orange, 90);
+    border: 1px solid @orange;
   }
 }
 
