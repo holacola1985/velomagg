@@ -18,6 +18,7 @@
   "quotmark": false,
   "freeze": true,
   "unused": true,
+  "esnext": true,
   "globals": {
     /* MOCHA */
     "describe": false,

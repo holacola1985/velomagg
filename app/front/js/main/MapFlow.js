@@ -1,12 +1,22 @@
 /* jslint node: true */
-"use strict";
+'use strict';
 
+var React = require('react');
 var MapboxSocket = require('lightstream-socket').MapboxSocket;
 var VelomaggCollection = require('./VelomaggCollection');
-var StationCluster = require('./StationCluster');
 var MapQuadtree = require('../lib/MapQuadtree');
+var L = require('mapbox.js');
 
-var StationMarker = require('./StationMarker');
+//var StationMarker = require('./StationMarker');
+var VeloMap = require('./VeloMap.jsx');
+
+function createLayer(map, quadtree) {
+  var mapElement = React.createElement(VeloMap, {
+    quadtree: quadtree,
+    map: map
+  });
+  React.render(mapElement, document.getElementById('map-component'));
+}
 
 function MapFlow(config) {
   this.config = config;
@@ -16,18 +26,19 @@ MapFlow.prototype.setUp = function setUp() {
   this.velomagg = new VelomaggCollection();
   this.map = initializeMap();
   this._initializeQuadtree();
+  createLayer(this.map, this.quadtree);
   this._openSocket();
 };
 
 function initializeMap() {
   //test : 43.607653, 3.881696
-  return L.mapbox.map('map', 'mapbox.emerald')
+  return L.mapbox.map('map')
     .setView([43.605, 3.88], 16);
 }
 
 MapFlow.prototype._initializeQuadtree = function _initializeQuadtree() {
   var bounds = this._mapBoundsToQuadtreeBounds();
-  var quadtree = new MapQuadtree(bounds, 4, 3);
+  var quadtree = this.quadtree = new MapQuadtree(bounds, 4, 3);
 
   this.velomagg.on('add', function (model) {
     quadtree.addItem(model);
@@ -37,6 +48,7 @@ MapFlow.prototype._initializeQuadtree = function _initializeQuadtree() {
     quadtree.move(this._mapBoundsToQuadtreeBounds());
   }.bind(this));
 
+  /*
   quadtree.on('changed', function () {
     this.map.getPanes().markerPane.innerHTML = '';
 
@@ -48,6 +60,7 @@ MapFlow.prototype._initializeQuadtree = function _initializeQuadtree() {
       marker.render();
     }.bind(this));
   }.bind(this));
+  */
 };
 
 MapFlow.prototype._mapBoundsToQuadtreeBounds = function _mapBoundsToQuadtreeBounds() {

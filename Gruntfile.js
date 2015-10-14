@@ -1,3 +1,5 @@
+/* global __dirname */
+'use strict';
 var path = require('path');
 var lightstreamConfig = require('./config');
 var Handlebars = require('handlebars');
@@ -17,12 +19,14 @@ module.exports = function(grunt) {
   var config = {
     browserify: {
       options: {
-        transform: ['hbsfy'/*, 'reactify'*/],
+        transform: ['hbsfy', ['babelify', {
+          stage: 0
+        }]],
         watch: true,
         browserifyOptions: {
-          debug: true,
+          debug: true
         }
-      },
+      }
     },
     less: {},
     uglify: {
@@ -39,7 +43,7 @@ module.exports = function(grunt) {
     // browserify
     config.browserify[name] = {
       dest: dest_js,
-      src: 'app/front/js/' + name + '/index.js',
+      src: 'app/front/js/' + name + '/index.js'
     };
 
     // less

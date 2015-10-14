@@ -1,5 +1,5 @@
 /* jslint node: true */
-"use strict";
+'use strict';
 
 var Indicator = (function () {
   return function (canvas) {
@@ -10,11 +10,11 @@ var Indicator = (function () {
 
     var context = canvas.getContext('2d');
 
-    function drawArc(color, radius, start, end) {
+    function drawArc(color, radius, start = 0, end = 2 * Math.PI) {
       context.fillStyle = color;
       context.beginPath();
       context.moveTo(centerX, centerY);
-      context.arc(centerX, centerY, radius, start || 0, end || 2 * Math.PI, false);
+      context.arc(centerX, centerY, radius, start, end, false);
       context.fill();
       context.closePath();
     }
@@ -25,7 +25,7 @@ var Indicator = (function () {
       drawArc('#95c11f', outer_radius, 1.5 * Math.PI, (1.5 + 2 * percentage) * Math.PI);
       drawArc('#ffffff', inner_radius);
     };
-  }
+  };
 })();
 
 module.exports = Indicator;
