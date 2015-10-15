@@ -11,7 +11,8 @@ class Notif extends React.Component {
   constructor(props) {
     super(props);
     this.timeout = [];
-    this.props.model.on('change', this.onChange.bind(this));
+    this._onChange = this.onChange.bind(this);
+    this.props.model.on('change', this._onChange);
   }
 
   state = {
@@ -19,7 +20,7 @@ class Notif extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.model.on('change', this.onChange.bind(this));
+    this.props.model.off('change', this._onChange);
     this.timeout.forEach((timer) => {
       clearTimeout(timer);
     });
