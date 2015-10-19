@@ -1,5 +1,5 @@
 /* jslint node: true */
-"use strict";
+'use strict';
 
 var Promise = require('promise');
 var get = Promise.denodeify(require('request').get);
@@ -17,7 +17,7 @@ var config = {
 var parser = new xml2js.Parser();
 
 var stations = {};
-var fake = process.argv.reduce(function (exists, argument) {
+var fake = process.argv.reduce(function(exists, argument) {
   exists |= argument === '--fake';
   return exists;
 }, false);
@@ -47,7 +47,7 @@ function mapStation(si) {
 
 function filterStation(station) {
   fakeData(station);
-  return station.name && !_.isEqual(stations[station.id], station, function (value) {
+  return station.name && !_.isEqual(stations[station.id], station, function(value) {
     if (/\d{4}-\d{2}-\d{2}/g.test(value)) {
       return true;
     }
@@ -68,13 +68,13 @@ function sendToLightstream(station) {
     url: config.lightstream_url,
     body: body,
     json: true
-  }).then(function (response) {
+  }).then(function(response) {
     if (response.statusCode !== 200) {
       throw new Error(response.statusCode + ' : ' + (response.body.message || 'unknown error'));
     }
     stations[station.id] = station;
     //console.log('station updated: ' + station.id);
-  }).catch(function (error) {
+  }).catch(function(error) {
     console.log(error);
   });
 }
@@ -86,12 +86,12 @@ parser.addListener('end', function(result) {
     .forEach(sendToLightstream);
 });
 
-setInterval(function () {
+setInterval(function() {
   //console.log('loading...');
   get({
     url: config.velomagg_url,
     encoding: null
-  }).then(function (response) {
+  }).then(function(response) {
     //console.log('response loaded.');
     if (response.statusCode === 200) {
       parser.parseString(iconv.decode(response.body, 'win1252'));
