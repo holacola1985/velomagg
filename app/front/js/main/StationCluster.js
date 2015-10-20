@@ -4,9 +4,6 @@
 var Cluster = require('../lib/Cluster');
 
 var StationCluster = Cluster.extend({
-  changedValues: function (item) {
-    return item.data().available_bikes - item._previousAttributes.data.available_bikes;
-  },
   name: function () {
     return this.isACluster() ?
       this.clusterSize() + ' stations':

@@ -13,6 +13,9 @@ var VelomaggStation = ItemBackboneModel.extend({
   },
   hash: function () {
     return this.cid;
+  },
+  bikesChange: function () {
+    return this.data().available_bikes - this._previousAttributes.data.available_bikes;
   }
 });
 
