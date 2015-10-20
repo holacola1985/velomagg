@@ -40,8 +40,9 @@ body {
 .station-marker {
   position: absolute;
   margin: -@width/2 0 0 -@width/2;
-  width: @width;
-  height: @width;
+  width: @width+2;
+  height: @width+2;
+  padding: 1px;
 
   .circle, canvas {
     position: absolute;
@@ -52,7 +53,6 @@ body {
   .circle {
     border-radius: @width;
     background-color: fade(@orange, 90%);
-    overflow: hidden;
   }
 
   @textWidth: 32px;
