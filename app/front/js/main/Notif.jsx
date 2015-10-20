@@ -29,6 +29,10 @@ class Notif extends React.Component {
   }
 
   onChange(diff) {
+    if (!diff) {
+      return;
+    }
+
     notif_id++;
     this.setState({
       notifs: this.state.notifs.concat([{
