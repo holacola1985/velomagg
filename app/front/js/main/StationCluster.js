@@ -1,16 +1,16 @@
 /* jslint node: true */
-"use strict";
+'use strict';
 
 var Cluster = require('../lib/Cluster');
 
 var StationCluster = Cluster.extend({
   changedValues: function (item) {
-    return item.data().available_bikes - item._previousAttributes.data.available_bikes
+    return item.data().available_bikes - item._previousAttributes.data.available_bikes;
   },
   name: function () {
     return this.isACluster() ?
       this.clusterSize() + ' stations':
-      this.toJSON()['0'].data().name;
+      this.data()[0].name;
   },
   availableBikes: function () {
     return this.data().reduce(function (sum, station_data) {
@@ -31,7 +31,7 @@ var StationCluster = Cluster.extend({
     return this.clusterSize() > 1;
   },
   clusterSize: function () {
-    return Object.keys(this.toJSON()).length;
+    return this.length;
   }
 });
 

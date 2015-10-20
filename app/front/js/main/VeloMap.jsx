@@ -61,21 +61,21 @@ class VeloMap extends React.Component {
       <MapboxLayer url="mapbox.emerald"/>
       <Layer interactive>
         <div>{this.state.zoom}</div>
-        {this.state.list.map((station) => {
-          let key = station.cid;
-          let coordinates = station.coordinates();
+        {this.state.list.map((stations) => {
+          let key = stations.key();
+          let coordinates = stations.coordinates();
           let geojson = {
             type: 'Point',
             coordinates: [coordinates[1], coordinates[0]]
           };
           return <Marker key={key} geojson={geojson}>
-            <StationMarker station={station} />
+            <StationMarker station={stations} />
             <Popup className="station-popup" offset={[0, 3]}>
-              <h3>{station.name()}</h3>
+              <h3>{stations.name()}</h3>
               <ul>
-                <li className="available-bikes">{station.availableBikes()} vélo(s) disponible(s)</li>
-                <li className="free-slots">{station.freeSlots()} place(s) libre(s)</li>
-                <li className="total">{station.total()} place(s) au total</li>
+                <li className="available-bikes">{stations.availableBikes()} vélo(s) disponible(s)</li>
+                <li className="free-slots">{stations.freeSlots()} place(s) libre(s)</li>
+                <li className="total">{stations.total()} place(s) au total</li>
               </ul>
             </Popup>
           </Marker>;})}

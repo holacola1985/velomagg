@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 
 let notif_id = 0;
@@ -8,7 +6,7 @@ class Notif extends React.Component {
 
   static propTypes = {
     model: React.PropTypes.any    
-  };
+  }
 
   constructor(props) {
     super(props);
@@ -19,7 +17,7 @@ class Notif extends React.Component {
 
   state = {
     notifs: []
-  };
+  }
 
   componentWillUnmount() {
     this.props.model.off('change', this._onChange);
