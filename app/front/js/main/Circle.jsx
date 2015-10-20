@@ -7,7 +7,7 @@ class Circle extends React.Component {
   static propTypes = {
     value: React.PropTypes.number,
     total: React.PropTypes.number
-  }
+  };
   componentDidMount() {
     let node = this.refs.canvas.getDOMNode();
     this.indicator = new Indicator(node);

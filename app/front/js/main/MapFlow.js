@@ -5,18 +5,10 @@ var React = require('react');
 var MapboxSocket = require('lightstream-socket').MapboxSocket;
 var VelomaggCollection = require('./VelomaggCollection');
 var MapQuadtree = require('../lib/MapQuadtree');
+var BoundingBox = require('../lib/BoundingBox');
 var L = require('mapbox.js');
 
-//var StationMarker = require('./StationMarker');
 var VeloMap = require('./VeloMap.jsx');
-
-function createLayer(map, quadtree) {
-  var mapElement = React.createElement(VeloMap, {
-    quadtree: quadtree,
-    map: map
-  });
-  React.render(mapElement, document.getElementById('map-component'));
-}
 
 function MapFlow(config) {
   this.config = config;
@@ -24,57 +16,37 @@ function MapFlow(config) {
 
 MapFlow.prototype.setUp = function setUp() {
   this.velomagg = new VelomaggCollection();
-  this.map = initializeMap();
+
+  this._initializeMap();
   this._initializeQuadtree();
-  createLayer(this.map, this.quadtree);
+  this._createLayer();
   this._openSocket();
 };
 
-function initializeMap() {
-  //test : 43.607653, 3.881696
-  return L.mapbox.map('map')
-    .setView([43.605, 3.88], 16);
-}
+MapFlow.prototype._initializeMap = function _initializeMap() {
+  this.map = L.mapbox.map('map')
+    .setView([43.605, 3.88], 13);
+};
 
 MapFlow.prototype._initializeQuadtree = function _initializeQuadtree() {
-  var bounds = this._mapBoundsToQuadtreeBounds();
-  var quadtree = this.quadtree = new MapQuadtree(bounds, 4, 3);
+  var bounds = fixedQuadtreeBounds();
+  var quadtree = this.quadtree = new MapQuadtree(bounds, 1);
 
   this.velomagg.on('add', function (model) {
     quadtree.addItem(model);
   });
-
-  this.map.on('moveend', function () {
-    quadtree.move(this._mapBoundsToQuadtreeBounds());
-  }.bind(this));
-
-  /*
-  quadtree.on('changed', function () {
-    this.map.getPanes().markerPane.innerHTML = '';
-
-    quadtree.flatten().forEach(function (cluster) {
-      var marker = new StationMarker({
-        model: new StationCluster(cluster),
-        map: this.map
-      });
-      marker.render();
-    }.bind(this));
-  }.bind(this));
-  */
 };
 
-MapFlow.prototype._mapBoundsToQuadtreeBounds = function _mapBoundsToQuadtreeBounds() {
-  var bounds = this.map.getBounds();
-    return {
-    south_west: {
-      latitude: bounds._southWest.lat,
-      longitude: bounds._southWest.lng
-    },
-    north_east: {
-      latitude: bounds._northEast.lat,
-      longitude: bounds._northEast.lng
-    }
-  };
+function fixedQuadtreeBounds() {
+  return new BoundingBox(3.704, 43.523, 4.056, 43.686);
+}
+
+MapFlow.prototype._createLayer = function _createLayer() {
+  var mapElement = React.createElement(VeloMap, {
+    quadtree: this.quadtree,
+    map: this.map
+  });
+  React.render(mapElement, document.getElementById('map-component'));
 };
 
 MapFlow.prototype._openSocket = function _openSocket() {
