@@ -24,15 +24,13 @@ class VeloMap extends React.Component {
 
     this.props.map.on('zoomend', function () {
       this.setState({
-        list: this.listClusters(),
-        zoom: this.props.map.getZoom()
+        list: this.listClusters()
       });
     }, this);
   }
 
   state = {
-    list: [],
-    zoom: this.props.map.getZoom()
+    list: []
   };
 
   componentWillUnmount() {
@@ -60,7 +58,6 @@ class VeloMap extends React.Component {
     return <Map map={this.props.map}>
       <MapboxLayer url="mapbox.emerald"/>
       <Layer interactive>
-        <div>{this.state.zoom}</div>
         {this.state.list.map((stations) => {
           let key = stations.key();
           let coordinates = stations.coordinates();
