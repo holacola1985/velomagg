@@ -51,8 +51,8 @@ class StationMarker extends React.Component {
 
     return <div className="station-marker">
       <Circle value={station.availableBikes()} total={station.total()} />
-      <div className="cluster" style={cluster_style}>{station.clusterSize()}</div>
       <div className="text" style={this.textStyle(station)}>{this.text(station)}</div>
+      <div className="cluster" style={cluster_style}>{station.clusterSize()}</div>
       <Notif model={station} />
     </div>;
   }

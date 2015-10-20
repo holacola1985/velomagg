@@ -32,7 +32,7 @@ body {
   }
 }
 
-@width: 45px;
+@width: 46px;
 @purple: #6d3e91;
 @green: #95c11f;
 @orange: #ea5b0c;
@@ -43,28 +43,41 @@ body {
   width: @width;
   height: @width;
 
-  .text, canvas {
+  .circle, canvas {
     position: absolute;
     width: @width;
     height: @width;
   }
 
+  .circle {
+    border-radius: @width;
+    background-color: fade(@orange, 90%);
+    overflow: hidden;
+  }
+
+  @textWidth: 32px;
+
   .text {
+    position: absolute;
+    width: @textWidth;
+    height: @textWidth;
     font-weight: 600;
     color: @purple;
     text-align: center;
-    line-height: @width;
+    line-height: @textWidth;
+    border-radius: @textWidth;
+    background-color: fade(white, 95%);
+    margin: (@width - @textWidth) / 2 0 0 (@width - @textWidth) / 2;
   }
 
-  @clusterWidth: 17px;
+  @clusterWidth: 18px;
 
   .cluster {
     position: absolute;
     width: @clusterWidth;
     height: @clusterWidth;
     line-height: 14px;
-    top: -5px;
-    left: 14px;
+    margin: -5px 0 0 14px;
     text-align: center;
     color: white;
     border: 2px solid @purple;

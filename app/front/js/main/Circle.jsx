@@ -29,7 +29,9 @@ class Circle extends React.Component {
     this.indicator.render(this._state.percent);
   }
   render() {
-    return <canvas ref="canvas" width="45" height="45" />;
+    return <div className="circle">
+      <canvas ref="canvas" width="46" height="46" />
+    </div>;
   }
 }
 
