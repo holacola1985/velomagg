@@ -7,7 +7,7 @@ class Circle extends React.Component {
   static propTypes = {
     value: React.PropTypes.number,
     total: React.PropTypes.number
-  }
+  };
   componentDidMount() {
     let node = this.refs.canvas.getDOMNode();
     this.indicator = new Indicator(node);
@@ -29,7 +29,9 @@ class Circle extends React.Component {
     this.indicator.render(this._state.percent);
   }
   render() {
-    return <canvas ref="canvas" width="45" height="45" />;
+    return <div className="circle">
+      <canvas ref="canvas" width="46" height="46" />
+    </div>;
   }
 }
 

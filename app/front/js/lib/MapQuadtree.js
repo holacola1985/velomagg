@@ -3,6 +3,8 @@
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+var _ = require('lodash');
+var BoundingBox = require('./BoundingBox');
 
 function Node(bounds, node_capacity, depth, max_depth) {
   EventEmitter.call(this);
@@ -18,7 +20,7 @@ function Node(bounds, node_capacity, depth, max_depth) {
 util.inherits(Node, EventEmitter);
 
 Node.prototype.addItem = function addItem(item) {
-  if (!this._isInBounds(item)) {
+  if (!this._isInBounds(item.longitude(), item.latitude())) {
     return false;
   }
 
@@ -31,18 +33,8 @@ Node.prototype.addItem = function addItem(item) {
   return true;
 };
 
-Node.prototype._isInBounds = function _isInBounds(item) {
-  var is_greater_than_sw_longitude = item.longitude() >= this._bounds.south_west.longitude;
-  var is_lower_than_ne_longitude = item.longitude() < this._bounds.north_east.longitude;
-
-  var is_longitude_in_bounds =
-    this._bounds.north_east.longitude > this._bounds.south_west.longitude ?
-      is_greater_than_sw_longitude && is_lower_than_ne_longitude :
-      is_greater_than_sw_longitude || is_lower_than_ne_longitude;
-
-    return item.latitude() >= this._bounds.south_west.latitude &&
-      item.latitude() < this._bounds.north_east.latitude &&
-      is_longitude_in_bounds;
+Node.prototype._isInBounds = function _isInBounds(longitude, latitude) {
+  return this._bounds.isInBounds(longitude, latitude);
 };
 
 Node.prototype._didNotReachCapacity = function _didNotReachCapacity() {
@@ -76,44 +68,33 @@ Node.prototype._split = function _split() {
 };
 
 Node.prototype._createNodes = function _createNodes() {
-  var middle_point = this._middlePoint();
+  var middle_point = this._bounds.middlePoint();
   this._nodes = {
-    NW: new Node({
-      south_west: {latitude: middle_point.latitude, longitude: this._bounds.south_west.longitude},
-      north_east: {latitude: this._bounds.north_east.latitude, longitude: middle_point.longitude}
-    }, this._node_capacity, this._depth + 1, this._max_depth),
-    NE: new Node({
-      south_west: {latitude: middle_point.latitude, longitude: middle_point.longitude},
-      north_east: {latitude: this._bounds.north_east.latitude, longitude: this._bounds.north_east.longitude}
-    }, this._node_capacity, this._depth + 1, this._max_depth),
-    SE: new Node({
-      south_west: {latitude: this._bounds.south_west.latitude, longitude: middle_point.longitude},
-      north_east: {latitude: middle_point.latitude, longitude: this._bounds.north_east.longitude}
-    }, this._node_capacity, this._depth + 1, this._max_depth),
-    SW: new Node({
-      south_west: {latitude: this._bounds.south_west.latitude, longitude: this._bounds.south_west.longitude},
-      north_east: {latitude: middle_point.latitude, longitude: middle_point.longitude}
-    }, this._node_capacity, this._depth + 1, this._max_depth)
+    NW: this._newChildNode(new BoundingBox(
+      this._bounds.south_west.longitude,
+      middle_point.latitude,
+      middle_point.longitude,
+      this._bounds.north_east.latitude)),
+    NE: this._newChildNode(new BoundingBox(
+      middle_point.longitude,
+      middle_point.latitude,
+      this._bounds.north_east.longitude,
+      this._bounds.north_east.latitude)),
+    SE: this._newChildNode(new BoundingBox(
+      middle_point.longitude,
+      this._bounds.south_west.latitude,
+      this._bounds.north_east.longitude,
+      middle_point.latitude)),
+    SW: this._newChildNode(new BoundingBox(
+      this._bounds.south_west.longitude,
+      this._bounds.south_west.latitude,
+      middle_point.longitude,
+      middle_point.latitude))
   };
 };
-Node.prototype._middlePoint = function _middlePoint() {
-  var middle_point = {};
-  middle_point.latitude = (this._bounds.north_east.latitude + this._bounds.south_west.latitude) / 2;
 
-  var longitude_offset = this._longitudeOffset();
-  middle_point.longitude = longitude_offset + (this._bounds.north_east.longitude + this._bounds.south_west.longitude) / 2;
-
-  return middle_point;
-};
-
-Node.prototype._longitudeOffset = function _longitudeOffset() {
-  var longitude_offset = 0;
-  if (this._bounds.north_east.longitude < this._bounds.south_west.longitude) {
-    longitude_offset =
-      Math.abs(this._bounds.north_east.longitude) < Math.abs(this._bounds.south_west.longitude) ?
-        -180 : 180;
-  }
-  return longitude_offset;
+Node.prototype._newChildNode = function _newChildNode(bounds) {
+  return new Node(bounds, this._node_capacity, this._depth + 1, this._max_depth);
 };
 
 Node.prototype._breakDownCurrentItems = function _breakDownCurrentItems() {
@@ -129,31 +110,43 @@ Node.prototype._isLeaf = function _isLeaf() {
   return !this._nodes.SW;
 };
 
-Node.prototype.flatten = function flatten() {
-  if (this._isLeaf()) {
-    return this._depth === 1 ?
-      this._items.map(function (item) {
-        return [item];
-      }) :
-      [this._items];
+Node.prototype.reduce = function reduce(search_bounds, max_depth) {
+  if (!this._bounds.intersects(search_bounds)) {
+    return [];
   }
 
-  var flattened = [];
-  for (var node in this._nodes) {
-    if (!this._nodes[node]._isEmpty()) {
-      flattened = flattened.concat(this._nodes[node].flatten());
+  if (this._isLeaf()) {
+    if (this._isEmpty()) {
+      return [];
     }
+
+    return [this._items];
   }
-  return flattened;
+
+  return this._reduceChildNodesItems(search_bounds, max_depth);
+};
+
+Node.prototype._reduceChildNodesItems = function _reduceChildNodesItems(search_bounds, max_depth) {
+  var items = this._nodes.NW.reduce(search_bounds, max_depth)
+    .concat(this._nodes.NE.reduce(search_bounds, max_depth))
+    .concat(this._nodes.SE.reduce(search_bounds, max_depth))
+    .concat(this._nodes.SW.reduce(search_bounds, max_depth));
+
+  if (max_depth && this._depth >= max_depth) {
+    return [_.flatten(items)];
+  }
+  return items;
 };
 
 Node.prototype._isEmpty = function _isEmpty() {
-  return (this._isLeaf() && this._items.length === 0) ||
-    (!this._isLeaf() &&
-      this._nodes.NW._isEmpty() &&
+  if (this._isLeaf()) {
+    return this._items.length === 0;
+  }
+
+  return this._nodes.NW._isEmpty() &&
       this._nodes.NE._isEmpty() &&
       this._nodes.SE._isEmpty() &&
-      this._nodes.SW._isEmpty());
+      this._nodes.SW._isEmpty();
 };
 
 Node.prototype.toString = function toString(cardinal) {
@@ -165,7 +158,7 @@ Node.prototype.toString = function toString(cardinal) {
 
   if (this._isLeaf()) {
     return text + '[' + this._items.length + ']' + this._items.map(function (item) {
-        return item.get('data').name;
+        return item.hash();
       }).join() + '\n';
   }
 
@@ -214,11 +207,8 @@ MapQuadtree.prototype.flatten = function flatten() {
   return this.rootNode().flatten();
 };
 
-MapQuadtree.prototype.move = function move(new_bounds) {
-  this._initializeRootNode(new_bounds);
-  Object.keys(this._items).forEach(function (hash) {
-    this.rootNode().addItem(this._items[hash]);
-  }.bind(this));
+MapQuadtree.prototype.reduce = function reduce(search_bounds, max_depth) {
+  return this.rootNode().reduce(search_bounds, max_depth);
 };
 
 MapQuadtree.prototype.toString = function toString() {
