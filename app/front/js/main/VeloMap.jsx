@@ -55,27 +55,41 @@ class VeloMap extends React.Component {
   }
 
   render() {
+    let miniMarkers = [];
+    let stationsMarkers = [];
+    this.state.list.forEach((stations) => {
+      let key = stations.key();
+      let coordinates = stations.coordinates();
+      let geojson = {
+        type: 'Point',
+        coordinates: [coordinates[1], coordinates[0]]
+      };
+      if(stations.isACluster()){
+        stations.each(function(station){
+          miniMarkers.push(<Marker key={station.id} geojson={station.get('geojson')}>
+            <div className="mini-marker" />
+          </Marker>);
+        });
+      }
+      stationsMarkers.push(<Marker key={key} geojson={geojson}>
+        <StationMarker station={stations} />
+        <Popup className="station-popup" offset={[0, 3]}>
+          <h3>{stations.name()}</h3>
+          <ul>
+            <li className="available-bikes">{stations.availableBikes()} vélo(s) disponible(s)</li>
+            <li className="free-slots">{stations.freeSlots()} place(s) libre(s)</li>
+            <li className="total">{stations.total()} place(s) au total</li>
+          </ul>
+        </Popup>
+      </Marker>);
+    });
     return <Map map={this.props.map}>
       <MapboxLayer url="mapbox.emerald"/>
+      <Layer>
+        {miniMarkers}
+      </Layer>
       <Layer interactive>
-        {this.state.list.map((stations) => {
-          let key = stations.key();
-          let coordinates = stations.coordinates();
-          let geojson = {
-            type: 'Point',
-            coordinates: [coordinates[1], coordinates[0]]
-          };
-          return <Marker key={key} geojson={geojson}>
-            <StationMarker station={stations} />
-            <Popup className="station-popup" offset={[0, -15]}>
-              <h3>{stations.name()}</h3>
-              <ul>
-                <li className="available-bikes">{stations.availableBikes()} vélo(s) disponible(s)</li>
-                <li className="free-slots">{stations.freeSlots()} place(s) libre(s)</li>
-                <li className="total">{stations.total()} place(s) au total</li>
-              </ul>
-            </Popup>
-          </Marker>;})}
+        {stationsMarkers}
       </Layer>
     </Map>;
   }
