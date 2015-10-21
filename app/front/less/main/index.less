@@ -33,9 +33,6 @@ body {
 }
 
 @width: 46px;
-@purple: #6d3e91;
-@green: #95c11f;
-@orange: #ea5b0c;
 
 .station-marker {
   position: absolute;
@@ -51,7 +48,7 @@ body {
 
   .circle {
     border-radius: @width;
-    background-color: fade(@orange, 90%);
+    opacity: 0.9;
     overflow: hidden;
   }
 
@@ -62,11 +59,12 @@ body {
     width: @textWidth;
     height: @textWidth;
     font-weight: 600;
-    color: @purple;
+    //color: @purple;
     text-align: center;
     line-height: @textWidth;
     border-radius: @textWidth;
-    background-color: fade(white, 95%);
+    background-color: white;
+    opacity: 0.95;
     margin: (@width - @textWidth) / 2 0 0 (@width - @textWidth) / 2;
   }
 
@@ -80,8 +78,6 @@ body {
     margin: -5px 0 0 14px;
     text-align: center;
     color: white;
-    border: 2px solid @purple;
-    background-color: @purple;
     border-radius: @clusterWidth;
   }
 
@@ -101,9 +97,9 @@ body {
       background: rgba(255,255,255,0.8);
       border-radius: 6px;
       box-shadow: 0 0 3px rgba(0,0,0,0.3);
-      border: 1px solid white;
       color: white;
-      .fa{
+      opacity: 0.9;
+      .fa {
         margin-bottom: -1px;
       }
     }
@@ -112,21 +108,11 @@ body {
       font-size: 22px;
     }
   }
-
-  .in .change{
-    background: fade(@green, 90);
-    border: 1px solid @green;
-  }
-
-  .out .change{
-    background: fade(@orange, 90);
-    border: 1px solid @orange;
-  }
 }
 
 .position {
   font-size: 30px;
-  color: @purple;
+  color: rgba(50,50,50,1);
 }
 
 .leaflet-control-command {
@@ -141,18 +127,6 @@ body {
     margin: 0px;
     list-style-type: none;
   }
-}
-
-li.available-bikes {
-  color: @green;
-}
-
-li.free-slots {
-  color: @orange;
-}
-
-li.total {
-  color: @purple;
 }
 
 .station-popup {

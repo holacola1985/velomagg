@@ -10,7 +10,8 @@ class VeloMap extends React.Component {
 
   static propTypes = {
     quadtree: React.PropTypes.any,
-    map: React.PropTypes.any
+    map: React.PropTypes.any,
+    config: React.PropTypes.any
   };
 
   constructor(props) {
@@ -65,14 +66,18 @@ class VeloMap extends React.Component {
             type: 'Point',
             coordinates: [coordinates[1], coordinates[0]]
           };
+          let bikes_style = { color: this.props.config.colors.bikes };
+          let slots_style = { color: this.props.config.colors.slots };
+          let total_style = { color: this.props.config.colors.text };
+
           return <Marker key={key} geojson={geojson}>
-            <StationMarker station={stations} />
-            <Popup className="station-popup" offset={[0, -15]}>
+            <StationMarker station={stations} colors={this.props.config.colors} />
+            <Popup className="station-popup" offset={[0, -15]} colors={this.props.config.colors}>
               <h3>{stations.name()}</h3>
               <ul>
-                <li className="available-bikes">{stations.availableBikes()} vélo(s) disponible(s)</li>
-                <li className="free-slots">{stations.freeSlots()} place(s) libre(s)</li>
-                <li className="total">{stations.total()} place(s) au total</li>
+                <li style={bikes_style}>{stations.availableBikes()} vélo(s) disponible(s)</li>
+                <li style={slots_style}>{stations.freeSlots()} place(s) libre(s)</li>
+                <li style={total_style}>{stations.total()} place(s) au total</li>
               </ul>
             </Popup>
           </Marker>;})}

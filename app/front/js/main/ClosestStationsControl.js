@@ -24,6 +24,8 @@ var ClosestStationsControl = L.Control.extend({
     });
   },
   _render: function (closest_stations) {
+    closest_stations.bikes_style = 'color: ' + this.options.colors.bikes;
+    closest_stations.slots_style = 'color: ' + this.options.colors.slots;
     this.container.innerHTML = renderControl(closest_stations);
   }
 });

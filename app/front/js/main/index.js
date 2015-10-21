@@ -24,7 +24,7 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
   var map_flow = new MapFlow(config);
   map_flow.setUp();
 
-  var position_flow = new PositionFlow(map_flow.map, map_flow.velomagg);
+  var position_flow = new PositionFlow(config, map_flow.map, map_flow.velomagg);
   position_flow.setUp();
 
 })(config);

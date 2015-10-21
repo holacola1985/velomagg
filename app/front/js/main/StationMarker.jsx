@@ -8,7 +8,8 @@ class StationMarker extends React.Component {
 
   static propTypes = {
     station: React.PropTypes.any,
-    map: React.PropTypes.any
+    map: React.PropTypes.any,
+    colors: React.PropTypes.any
   };
 
   constructor(props) {
@@ -30,11 +31,14 @@ class StationMarker extends React.Component {
   }
 
   textStyle(station) {
+    let style = {
+      color: this.props.colors.text
+    };
     if (station.total() >= 100) {
-      return { fontSize: 14 };
+      style.fontSize = 14;
     }
 
-    return {};
+    return style;
   }
 
   text(station) {
@@ -45,15 +49,21 @@ class StationMarker extends React.Component {
     return station.availableBikes() + '/' + station.total();
   }
 
+  clusterStyle(station) {
+    let cluster_style = station.isACluster() ? {} : { display: 'none' };
+    cluster_style.border = '2px solid ' + this.props.colors.text;
+    cluster_style.backgroundColor = this.props.colors.text;
+    return cluster_style;
+  }
+
   render() {
     let station = this.state.station;
-    let cluster_style = station.isACluster() ? {} : { display: 'none' };
 
     return <div className="station-marker">
-      <Circle value={station.availableBikes()} total={station.total()} />
+      <Circle value={station.availableBikes()} total={station.total()} colors={this.props.colors} />
       <div className="text" style={this.textStyle(station)}>{this.text(station)}</div>
-      <div className="cluster" style={cluster_style}>{station.clusterSize()}</div>
-      <Notif model={station} />
+      <div className="cluster" style={this.clusterStyle(station)}>{station.clusterSize()}</div>
+      <Notif model={station} colors={this.props.colors} />
     </div>;
   }
 }

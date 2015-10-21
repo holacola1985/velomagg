@@ -44,7 +44,8 @@ function fixedQuadtreeBounds() {
 MapFlow.prototype._createLayer = function _createLayer() {
   var mapElement = React.createElement(VeloMap, {
     quadtree: this.quadtree,
-    map: this.map
+    map: this.map,
+    config: this.config
   });
   React.render(mapElement, document.getElementById('map-component'));
 };

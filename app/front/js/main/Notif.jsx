@@ -7,7 +7,8 @@ let notif_id = 0;
 class Notif extends React.Component {
 
   static propTypes = {
-    model: React.PropTypes.any    
+    model: React.PropTypes.any,
+    colors: React.PropTypes.any
   };
 
   constructor(props) {
@@ -53,8 +54,13 @@ class Notif extends React.Component {
       {this.state.notifs.map((notif) => {
         let css = notif.diff > 0 ? 'in' : 'out';
         let sign = notif.diff > 0 ? '+' : '-';
+        let color = notif.diff > 0 ? this.props.colors.bikes : this.props.colors.slots;
+        let style = {
+          backgroundColor: color,
+          border: '1px solid ' + color
+        };
         return <div className={css} key={notif.id}>
-          <span className="change">
+          <span className="change" style={style}>
             <span className="count">
               {sign + Math.abs(notif.diff) + ' '}
             </span>
@@ -67,5 +73,4 @@ class Notif extends React.Component {
 
 }
 
-export
-default Notif;
+export default Notif;

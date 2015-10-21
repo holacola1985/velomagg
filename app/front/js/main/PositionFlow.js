@@ -4,7 +4,8 @@
 var PositionMarker = require('./PositionMarker');
 var ClosestStationsControl = require('./ClosestStationsControl');
 
-function PositionFlow(map, velomagg) {
+function PositionFlow(config, map, velomagg) {
+  this.config = config;
   this.map = map;
   this.velomagg = velomagg;
 }
@@ -45,7 +46,9 @@ PositionFlow.prototype._initializePositionMarker = function _initializePositionM
 
   this.position_marker = new PositionMarker();
   this.position_marker.addTo(this.map);
-  var control = new ClosestStationsControl();
+  var control = new ClosestStationsControl({
+    colors: this.config.colors
+  });
   control.addTo(this.map);
 
   function updateControl() {

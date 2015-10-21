@@ -2,7 +2,7 @@
 'use strict';
 
 var Indicator = (function () {
-  return function (canvas) {
+  return function (canvas, color) {
     var centerX = canvas.width / 2;
     var centerY = canvas.height / 2;
     var outer_radius = Math.min(centerX, centerY);
@@ -20,7 +20,7 @@ var Indicator = (function () {
 
     this.render = function render(percentage) {
       context.clearRect(0, 0, canvas.width, canvas.height);
-      drawArc('#95c11f', outer_radius, 1.5 * Math.PI, (1.5 + 2 * percentage) * Math.PI);
+      drawArc(color, outer_radius, 1.5 * Math.PI, (1.5 + 2 * percentage) * Math.PI);
     };
   };
 })();
