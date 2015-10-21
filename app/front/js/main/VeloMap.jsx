@@ -1,7 +1,10 @@
 'use strict';
 import React from 'react';
 import _ from 'lodash';
-import { Map, Layer, MapboxLayer, Marker, Popup } from 'mapbox-react';
+import {
+  Map, Layer, MapboxLayer, Marker, Popup
+}
+from 'mapbox-react';
 import StationCluster from './StationCluster';
 import StationMarker from './StationMarker.jsx';
 import BoundingBox from '../lib/BoundingBox';
@@ -22,7 +25,7 @@ class VeloMap extends React.Component {
     }, 50);
     this.props.quadtree.on('changed', this.onAddRemove);
 
-    this.props.map.on('zoomend', function () {
+    this.props.map.on('zoomend', function() {
       this.setState({
         list: this.listClusters()
       });
@@ -55,19 +58,56 @@ class VeloMap extends React.Component {
   }
 
   render() {
+
     let miniMarkers = [];
     let stationsMarkers = [];
+
     this.state.list.forEach((stations) => {
+      if (!stations.length) {
+        //this should never happens ...
+        //but sometimes cluster is empty
+        return;
+      }
       let key = stations.key();
       let coordinates = stations.coordinates();
       let geojson = {
         type: 'Point',
         coordinates: [coordinates[1], coordinates[0]]
       };
-      if(stations.isACluster()){
-        stations.each(function(station){
+      if (stations.isACluster()) {
+        stations.each((station) => {
+          let c = this.props.map.latLngToLayerPoint(station.get('geojson').coordinates);
+          let C = this.props.map.latLngToLayerPoint(geojson.coordinates);
+          let dx = C.x - c.x;
+          let dy = C.y - c.y;
+          let d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+
+          //console.log(dx, dy);
+          let lineStyle = {
+            height: d
+          };
+
+          let alpha = Math.acos(dx / d) * (dy > 0 ? -1 : 1);
+          /*
+          if(dx < 0 && dy < 0){
+            alpha = Math.acos(dx / d);
+          }else if(dx < 0 && dy > 0){
+            alpha = -Math.acos(dx / d);
+          }else if(dx > 0 && dy < 0){
+            alpha = Math.acos(dx / d);
+          }else if(dx > 0 && dy > 0){
+            alpha = -Math.acos(dx / d);
+          }
+          */
+
+          let markerStyle = {
+            transform: `rotateZ(${alpha}rad)`
+          };
+
           miniMarkers.push(<Marker key={station.id} geojson={station.get('geojson')}>
-            <div className="mini-marker" />
+            <div style={markerStyle} className="mini-marker">
+              <div style={lineStyle} />
+            </div>
           </Marker>);
         });
       }
@@ -83,6 +123,7 @@ class VeloMap extends React.Component {
         </Popup>
       </Marker>);
     });
+
     return <Map map={this.props.map}>
       <MapboxLayer url="mapbox.emerald"/>
       <Layer>
@@ -95,4 +136,5 @@ class VeloMap extends React.Component {
   }
 }
 
-export default VeloMap;
+export
+default VeloMap;

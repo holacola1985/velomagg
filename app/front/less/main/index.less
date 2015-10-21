@@ -32,6 +32,17 @@ body {
   }
 }
 
+@keyframes stationsAppear {
+  0%{
+    transform: scale(0.5);
+    opacity: 0.1;
+  }
+  100%{
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @width: 46px;
 @purple: #6d3e91;
 @green: #95c11f;
@@ -42,6 +53,7 @@ body {
   margin: -@width/2 0 0 -@width/2;
   width: @width;
   height: @width;
+  animation: stationsAppear 0.1s 0.1s both;
 
   .circle, canvas {
     position: absolute;
@@ -122,10 +134,11 @@ body {
     background: fade(@orange, 90);
     border: 1px solid @orange;
   }
+  opacity: 0.1;
 }
 
 .mini-marker{
-  @w: 10px;
+  @w: 8px;
   position: absolute;
   background: #6d3e91;
   border-radius: @w;
@@ -133,11 +146,17 @@ body {
   height: @w;
   top: -@w/2;
   left: -@w/2;
+  transition: transform 0.1s;
+  //animation: stationsAppear 0.1s both;
   div{
+    .leaflet-zoom-anim &{
+      height: 4px !important;
+    }
     background: #6d3e91;
+    opacity: 0.8;
     width: 1px;
-    height: 40px;
     position: absolute;
+    transition: height 0.25s;
     bottom: @w/2;
     left: @w/2;
   }
