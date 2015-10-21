@@ -5,7 +5,7 @@ var Indicator = (function () {
   return function (canvas) {
     var centerX = canvas.width / 2;
     var centerY = canvas.height / 2;
-    var outer_radius = Math.min(centerX, centerY) + 1; // overflow on container causes some bugs
+    var outer_radius = Math.min(centerX, centerY);
 
     var context = canvas.getContext('2d');
 

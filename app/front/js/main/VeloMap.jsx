@@ -67,7 +67,7 @@ class VeloMap extends React.Component {
           };
           return <Marker key={key} geojson={geojson}>
             <StationMarker station={stations} />
-            <Popup className="station-popup" offset={[0, 3]}>
+            <Popup className="station-popup" offset={[0, -15]}>
               <h3>{stations.name()}</h3>
               <ul>
                 <li className="available-bikes">{stations.availableBikes()} vélo(s) disponible(s)</li>
