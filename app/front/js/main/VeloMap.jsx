@@ -86,19 +86,7 @@ class VeloMap extends React.Component {
           let lineStyle = {
             height: d
           };
-
           let alpha = Math.acos(dx / d) * (dy > 0 ? -1 : 1);
-          /*
-          if(dx < 0 && dy < 0){
-            alpha = Math.acos(dx / d);
-          }else if(dx < 0 && dy > 0){
-            alpha = -Math.acos(dx / d);
-          }else if(dx > 0 && dy < 0){
-            alpha = Math.acos(dx / d);
-          }else if(dx > 0 && dy > 0){
-            alpha = -Math.acos(dx / d);
-          }
-          */
 
           let markerStyle = {
             transform: `rotateZ(${alpha}rad)`
