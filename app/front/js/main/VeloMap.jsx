@@ -56,32 +56,46 @@ class VeloMap extends React.Component {
     return zoom - 8;
   }
 
+  popupStyle() {
+    return { __html:
+      `.station-popup .leaflet-popup-content-wrapper
+      { background: url("../img/${this.props.config.popup.background_image}") no-repeat 0 0; }
+      .station-popup h3
+      { background: url("../img/${this.props.config.popup.logo}") no-repeat left center; }`
+    };
+  }
+
   render() {
+    var dynamic_css = this.popupStyle();
+
     return <Map map={this.props.map}>
       <MapboxLayer url="mapbox.emerald"/>
       <Layer interactive>
-        {this.state.list.map((stations) => {
-          let key = stations.key();
-          let coordinates = stations.coordinates();
-          let geojson = {
-            type: 'Point',
-            coordinates: [coordinates[1], coordinates[0]]
-          };
-          let bikes_style = { color: this.props.config.colors.bikes };
-          let slots_style = { color: this.props.config.colors.slots };
-          let total_style = { color: this.props.config.colors.text };
+        <style type="text/css" dangerouslySetInnerHTML={dynamic_css} />
+        {
+          this.state.list.map((stations) => {
+            let key = stations.key();
+            let coordinates = stations.coordinates();
+            let geojson = {
+              type: 'Point',
+              coordinates: [coordinates[1], coordinates[0]]
+            };
+            let bikes_style = { color: this.props.config.colors.bikes };
+            let slots_style = { color: this.props.config.colors.slots };
+            let total_style = { color: this.props.config.colors.text };
 
-          return <Marker key={key} geojson={geojson}>
-            <StationMarker station={stations} colors={this.props.config.colors} />
-            <Popup className="station-popup" offset={[0, -15]} colors={this.props.config.colors}>
-              <h3>{stations.name()}</h3>
-              <ul>
-                <li style={bikes_style}>{this.props.i18n.t('popup.available_bikes', stations.availableBikes())}</li>
-                <li style={slots_style}>{this.props.i18n.t('popup.free_slots', stations.freeSlots())}</li>
-                <li style={total_style}>{this.props.i18n.t('popup.total', stations.total())}</li>
-              </ul>
-            </Popup>
-          </Marker>;})}
+            return <Marker key={key} geojson={geojson}>
+              <StationMarker station={stations} colors={this.props.config.colors} />
+              <Popup className="station-popup" offset={[0, -15]} colors={this.props.config.colors}>
+                <h3>{stations.name()}</h3>
+                <ul>
+                  <li style={bikes_style}>{this.props.i18n.t('popup.available_bikes', stations.availableBikes())}</li>
+                  <li style={slots_style}>{this.props.i18n.t('popup.free_slots', stations.freeSlots())}</li>
+                  <li style={total_style}>{this.props.i18n.t('popup.total', stations.total())}</li>
+                </ul>
+              </Popup>
+            </Marker>;})
+        }
       </Layer>
     </Map>;
   }
