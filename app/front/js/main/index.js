@@ -5,6 +5,7 @@ var L = require('mapbox.js');
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
+var Polyglot = require('node-polyglot');
 
 var MapFlow = require('./MapFlow');
 var PositionFlow = require('./PositionFlow');
@@ -21,10 +22,37 @@ L.mapbox.config.FORCE_HTTPS = true;
 L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
 
 (function(config) {
-  var map_flow = new MapFlow(config);
-  map_flow.setUp();
+  $.ajax({
+    url: "http://ajaxhttpheaders.appspot.com",
+    dataType: 'jsonp'
+  }).done(function (headers) {
+    var language = headers['Accept-Language'];
+    var locale = defineLocale(language);
+    setMap(locale);
+  }).fail(function (error) {
+    let language = window.navigator.userLanguage || window.navigator.language;
+    var locale = defineLocale(language);
+    setMap(locale);
+  });
 
-  var position_flow = new PositionFlow(config, map_flow.map, map_flow.velomagg);
-  position_flow.setUp();
+  function defineLocale(language) {
+    let locale = language.substr(0, 2);
+    return /(en|fr)/g.test(locale) ? locale : 'fr';
+  }
+
+  function setMap(locale) {
+    let polyglot = new Polyglot({locale : locale});
+
+    $.getJSON('i18n/' + locale + '.json')
+      .done(function (translations) {
+        polyglot.extend(translations);
+
+        let map_flow = new MapFlow(config, polyglot);
+        map_flow.setUp();
+
+        let position_flow = new PositionFlow(config, map_flow.map, map_flow.velomagg, polyglot);
+        position_flow.setUp();
+      });
+  }
 
 })(config);

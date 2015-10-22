@@ -11,7 +11,8 @@ class VeloMap extends React.Component {
   static propTypes = {
     quadtree: React.PropTypes.any,
     map: React.PropTypes.any,
-    config: React.PropTypes.any
+    config: React.PropTypes.any,
+    i18n: React.PropTypes.any
   };
 
   constructor(props) {
@@ -75,9 +76,9 @@ class VeloMap extends React.Component {
             <Popup className="station-popup" offset={[0, -15]} colors={this.props.config.colors}>
               <h3>{stations.name()}</h3>
               <ul>
-                <li style={bikes_style}>{stations.availableBikes()} vélo(s) disponible(s)</li>
-                <li style={slots_style}>{stations.freeSlots()} place(s) libre(s)</li>
-                <li style={total_style}>{stations.total()} place(s) au total</li>
+                <li style={bikes_style}>{this.props.i18n.t('popup.available_bikes', stations.availableBikes())}</li>
+                <li style={slots_style}>{this.props.i18n.t('popup.free_slots', stations.freeSlots())}</li>
+                <li style={total_style}>{this.props.i18n.t('popup.total', stations.total())}</li>
               </ul>
             </Popup>
           </Marker>;})}

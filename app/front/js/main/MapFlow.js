@@ -10,8 +10,9 @@ var L = require('mapbox.js');
 
 var VeloMap = require('./VeloMap.jsx');
 
-function MapFlow(config) {
+function MapFlow(config, i18n) {
   this.config = config;
+  this.i18n = i18n;
 }
 
 MapFlow.prototype.setUp = function setUp() {
@@ -45,7 +46,8 @@ MapFlow.prototype._createLayer = function _createLayer() {
   var mapElement = React.createElement(VeloMap, {
     quadtree: this.quadtree,
     map: this.map,
-    config: this.config
+    config: this.config,
+    i18n: this.i18n
   });
   React.render(mapElement, document.getElementById('map-component'));
 };
