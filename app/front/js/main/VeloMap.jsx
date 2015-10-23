@@ -24,7 +24,7 @@ class VeloMap extends React.Component {
     }, 50);
     this.props.quadtree.on('changed', this.onAddRemove);
 
-    this.props.map.on('zoomend', function () {
+    this.props.map.on('moveend', function () {
       this.setState({
         list: this.listClusters()
       });
