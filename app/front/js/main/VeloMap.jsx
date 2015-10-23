@@ -53,7 +53,7 @@ class VeloMap extends React.Component {
     if (zoom < 12) {
       return 1;
     }
-    return zoom - 8;
+    return zoom - this.props.config.zoom_offset || 8;
   }
 
   popupStyle() {
