@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import Rx from 'rx';
 
 let notif_id = 0;
 
@@ -15,7 +16,13 @@ class Notif extends React.Component {
     super(props);
     this.timeout = [];
     this._onChange = this.onChange.bind(this);
-    this.props.model.on('change', this._onChange);
+
+    this.subscription =
+      Rx.Observable.fromEvent(this.props.model, 'change')
+        .map(station => station.bikesChange())
+        .windowWithTime(1000)
+        .flatMap(buffer => buffer.sum())
+        .subscribe(this._onChange);
   }
 
   state = {
@@ -23,14 +30,13 @@ class Notif extends React.Component {
   };
 
   componentWillUnmount() {
-    this.props.model.off('change', this._onChange);
+    this.subscription.dispose();
     this.timeout.forEach((timer) => {
       clearTimeout(timer);
     });
   }
 
-  onChange(station) {
-    var diff = station.bikesChange();
+  onChange(diff) {
     if (!diff) {
       return;
     }
