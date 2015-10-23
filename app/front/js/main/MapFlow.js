@@ -30,8 +30,7 @@ MapFlow.prototype._initializeMap = function _initializeMap() {
     L.latLng(this.config.bounding_box.north_east[1],this.config.bounding_box.north_east[0])
   );
   this.map = L.mapbox.map('map')
-    .setView(leaflet_bounds.getCenter(), 13)
-    .panInsideBounds(leaflet_bounds);
+    .fitBounds(leaflet_bounds);
 };
 
 MapFlow.prototype._initializeQuadtree = function _initializeQuadtree() {
