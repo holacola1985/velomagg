@@ -61,7 +61,8 @@ class VeloMap extends React.Component {
       `.station-popup .leaflet-popup-content-wrapper
       { background: url("../img/${this.props.config.popup.background_image}") no-repeat 0 0; }
       .station-popup h3
-      { background: url("../img/${this.props.config.popup.logo}") no-repeat left center; }`
+      { background: url("../img/${this.props.config.popup.logo}") no-repeat left center; }
+      .station-popup .leaflet-popup-tip { border-top-color: ${this.props.config.colors.text}; }`
     };
   }
 
