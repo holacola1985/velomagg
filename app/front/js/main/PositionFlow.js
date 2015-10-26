@@ -4,9 +4,11 @@
 var PositionMarker = require('./PositionMarker');
 var ClosestStationsControl = require('./ClosestStationsControl');
 
-function PositionFlow(map, velomagg) {
+function PositionFlow(config, map, velomagg, i18n) {
+  this.config = config;
   this.map = map;
   this.velomagg = velomagg;
+  this.i18n = i18n;
 }
 
 PositionFlow.prototype.setUp = function setUp() {
@@ -22,17 +24,18 @@ PositionFlow.prototype._watchPosition = function _watchPosition() {
   window.navigator.geolocation.watchPosition(this._localizeUser.bind(this), console.log, options);
 };
 
-function userIsCloseEnoughFromAStation(latitude, longitude) {
-  //bounding box : NE:43.67 3.99, SW:43.56 3.77
-  return latitude <= 43.67 && latitude >= 43.56 &&
-    longitude <= 3.99 && longitude >= 3.77;
-}
+PositionFlow.prototype._userIsCloseEnoughFromAStation = function _userIsCloseEnoughFromAStation(latitude, longitude) {
+  return latitude <= this.config.bounding_box.north_east[1] &&
+    latitude >= this.config.bounding_box.south_west[1] &&
+    longitude <= this.config.bounding_box.north_east[0] &&
+    longitude >= this.config.bounding_box.south_west[0];
+};
 
 PositionFlow.prototype._localizeUser = function _localizeUser(geo) {
   var latitude = geo.coords.latitude;
   var longitude = geo.coords.longitude;
 
-  if (userIsCloseEnoughFromAStation(latitude, longitude)) {
+  if (this._userIsCloseEnoughFromAStation(latitude, longitude)) {
     this._initializePositionMarker();
     this.position_marker.updatePosition([latitude, longitude]);
   }
@@ -45,7 +48,10 @@ PositionFlow.prototype._initializePositionMarker = function _initializePositionM
 
   this.position_marker = new PositionMarker();
   this.position_marker.addTo(this.map);
-  var control = new ClosestStationsControl();
+  var control = new ClosestStationsControl({
+    colors: this.config.colors,
+    i18n: this.i18n
+  });
   control.addTo(this.map);
 
   function updateControl() {

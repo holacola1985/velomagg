@@ -24,6 +24,12 @@ var ClosestStationsControl = L.Control.extend({
     });
   },
   _render: function (closest_stations) {
+    closest_stations.bikes_style = 'color: ' + this.options.colors.bikes;
+    closest_stations.slots_style = 'color: ' + this.options.colors.slots;
+    closest_stations.closest_bike = this.options.i18n.t('control.closest_bike');
+    closest_stations.no_bike = this.options.i18n.t('control.no_bike');
+    closest_stations.closest_slot = this.options.i18n.t('control.closest_slot');
+    closest_stations.no_slot = this.options.i18n.t('control.no_slot');
     this.container.innerHTML = renderControl(closest_stations);
   }
 });

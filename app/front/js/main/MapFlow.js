@@ -10,8 +10,9 @@ var L = require('mapbox.js');
 
 var VeloMap = require('./VeloMap.jsx');
 
-function MapFlow(config) {
+function MapFlow(config, i18n) {
   this.config = config;
+  this.i18n = i18n;
 }
 
 MapFlow.prototype.setUp = function setUp() {
@@ -24,12 +25,16 @@ MapFlow.prototype.setUp = function setUp() {
 };
 
 MapFlow.prototype._initializeMap = function _initializeMap() {
+  var leaflet_bounds = L.latLngBounds(
+    L.latLng(this.config.bounding_box.south_west[1],this.config.bounding_box.south_west[0]),
+    L.latLng(this.config.bounding_box.north_east[1],this.config.bounding_box.north_east[0])
+  );
   this.map = L.mapbox.map('map')
-    .setView([43.605, 3.88], 13);
+    .fitBounds(leaflet_bounds);
 };
 
 MapFlow.prototype._initializeQuadtree = function _initializeQuadtree() {
-  var bounds = fixedQuadtreeBounds();
+  var bounds = this._fixedQuadtreeBounds();
   var quadtree = this.quadtree = new MapQuadtree(bounds, 1);
 
   this.velomagg.on('add', function (model) {
@@ -37,14 +42,20 @@ MapFlow.prototype._initializeQuadtree = function _initializeQuadtree() {
   });
 };
 
-function fixedQuadtreeBounds() {
-  return new BoundingBox(3.704, 43.523, 4.056, 43.686);
-}
+MapFlow.prototype._fixedQuadtreeBounds = function _fixedQuadtreeBounds() {
+  return new BoundingBox(
+    this.config.bounding_box.south_west[0],
+    this.config.bounding_box.south_west[1],
+    this.config.bounding_box.north_east[0],
+    this.config.bounding_box.north_east[1]);
+};
 
 MapFlow.prototype._createLayer = function _createLayer() {
   var mapElement = React.createElement(VeloMap, {
     quadtree: this.quadtree,
-    map: this.map
+    map: this.map,
+    config: this.config,
+    i18n: this.i18n
   });
   React.render(mapElement, document.getElementById('map-component'));
 };

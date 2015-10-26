@@ -1,0 +1,14 @@
+{
+  "popup": {
+    "stations": "%{stations_count} stations",
+    "available_bikes": "%{smart_count} available bike |||| %{smart_count} available bikes",
+    "free_slots": "%{smart_count} free stand |||| %{smart_count} free stands",
+    "total": "%{smart_count} stand in total |||| %{smart_count} stands in total"
+  },
+  "control": {
+    "closest_bike": "Closest available bike",
+    "no_bike": "no one nearby :( try to zoom out...",
+    "closest_slot": "Closest free stand",
+    "no_slot": "no one nearby :( try to zoom out..."
+  }
+}
