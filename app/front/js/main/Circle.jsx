@@ -10,7 +10,7 @@ class Circle extends React.Component {
     colors: React.PropTypes.any
   };
   componentDidMount() {
-    let node = this.refs.canvas.getDOMNode();
+    let node = this.refs.canvas;
     this.indicator = new Indicator(node, this.props.colors.bikes);
     this._state = {
       percent: this.props.value / this.props.total

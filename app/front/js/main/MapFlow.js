@@ -2,6 +2,7 @@
 'use strict';
 
 var React = require('react');
+var ReactDom = require('react-dom');
 var MapboxSocket = require('lightstream-socket').MapboxSocket;
 var VelomaggCollection = require('./VelomaggCollection');
 var MapQuadtree = require('../lib/MapQuadtree');
@@ -57,7 +58,7 @@ MapFlow.prototype._createLayer = function _createLayer() {
     config: this.config,
     i18n: this.i18n
   });
-  React.render(mapElement, document.getElementById('map-component'));
+  ReactDom.render(mapElement, document.getElementById('map-component'));
 };
 
 MapFlow.prototype._openSocket = function _openSocket() {
