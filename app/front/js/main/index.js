@@ -1,6 +1,7 @@
 'use strict';
 
 var config = require('../../../../config/public.json');
+window.config = config;
 var L = require('mapbox.js');
 var $ = require('jquery');
 var Backbone = require('backbone');
