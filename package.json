@@ -48,6 +48,7 @@
     "lower-case": "^1.1.2",
     "mapbox-react": "latest",
     "mapbox.js": "^2.2.2",
+    "node-polyglot": "^0.4.4",
     "promise": "^7.0.3",
     "raf": "^3.1.0",
     "react": "^0.13.3",
