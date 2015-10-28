@@ -5,6 +5,7 @@ var request = require('request');
 var _ = require('lodash');
 var Backbone = require('backbone');
 var config = require('../../config');
+var titleCase = require('./lib/title_case');
 
 Backbone.ajax = getData;
 
@@ -48,7 +49,7 @@ function saveData(model) {
   var data = {
     item: {
       data: {
-        name: raw.name,
+        name: titleCase(raw.name),
         available_bikes: raw.available_bikes,
         free_slots: raw.available_bike_stands,
         total: raw.bike_stands
