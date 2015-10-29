@@ -43,9 +43,16 @@ class VeloMap extends React.Component {
     var bounds = BoundingBox.fromLeafletMap(this.props.map);
     var depth_search = this.depthSearch();
 
-    return this.props.quadtree.reduce(bounds, depth_search).map((models) => {
-      return new StationCluster(models);
-    });
+    return this.props.quadtree.reduce(bounds, depth_search)
+      .filter((models) => {
+        if (!models.length) { //this should not happen, but as long as the bug has not been reproduced, this hack will avoid errors
+          console.error('a node from the quadtree has returned an empty set of items. This should not happen.');
+          return false;
+        }
+        return true;
+      }).map((models) => {
+        return new StationCluster(models);
+      });
   }
 
   depthSearch() {
