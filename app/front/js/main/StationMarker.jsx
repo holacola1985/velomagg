@@ -14,6 +14,7 @@ class StationMarker extends React.Component {
 
   constructor(props) {
     super(props);
+
     this._onChange = () => {
       this.setState({
         station: this.props.station
@@ -26,8 +27,16 @@ class StationMarker extends React.Component {
     station: this.props.station
   };
 
-  componentWillUnmount() {
+  componentWillUpdate() {
     this.props.station.off('change', this._onChange);
+  }
+
+  componentDidUpdate(){
+    this.props.station.on('change', this._onChange);
+  }
+
+  componentWillUnmount() {
+    this.props.station.off('change');
   }
 
   textStyle(station) {
