@@ -6,7 +6,7 @@ var Cluster = require('../lib/Cluster');
 var StationCluster = Cluster.extend({
   name: function () {
     return this.isACluster() ?
-      this.clusterSize() + ' stations':
+      this.options.i18n.t('popup.stations', { stations_count: this.clusterSize() }) :
       this.data()[0].name;
   },
   availableBikes: function () {

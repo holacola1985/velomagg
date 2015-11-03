@@ -4,6 +4,9 @@
 var Backbone = require('backbone');
 
 var Cluster = Backbone.Collection.extend({
+  initialize: function (models, options) {
+    this.options = options || {};
+  },
   key: function(){
     if(this.length > 1){
       return this.pluck('id').join('-');

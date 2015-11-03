@@ -51,7 +51,9 @@ class VeloMap extends React.Component {
         }
         return true;
       }).map((models) => {
-        return new StationCluster(models);
+        return new StationCluster(models, {
+          i18n: this.props.i18n
+        });
       });
   }
 

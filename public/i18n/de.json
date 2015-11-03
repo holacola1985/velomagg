@@ -1,0 +1,14 @@
+{
+  "popup": {
+    "stations": "%{stations_count} Radstation",
+    "available_bikes": "%{smart_count} Rad verfügbar |||| %{smart_count} Räder verfügbar",
+    "free_slots": "%{smart_count} Verfügbarer Platz |||| %{smart_count} Verfügbare Plätze",
+    "total": "%{smart_count} Total Platz |||| %{smart_count} Total Plätze"
+  },
+  "control": {
+    "closest_bike": "Rad am nähsten",
+    "no_bike": "Kein Rad verfügbar :( versuchen Sie es mit rauszoomen...",
+    "closest_slot": "Nähster Platz",
+    "no_slot": " Kein Platz verfügbar :( versuchen Sie es mit rauszoomen..."
+  }
+}
