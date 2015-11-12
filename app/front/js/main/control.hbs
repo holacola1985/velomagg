@@ -2,14 +2,14 @@
     <ul>
         <li style="{{bikes_style}}">{{closest_bike}}&nbsp;:
             {{#if closest_available_bike}}
-            <strong>{{closest_available_bike.data.name}}</strong> ({{closest_available_bike.distance}}&nbsp;m)
+            <strong>{{closest_available_bike.data.name}}</strong> ({{closest_available_bike.walking.distance}}&nbsp;m - {{closest_available_bike.walking.formatted_duration}})
             {{else}}
             {{no_bike}}
             {{/if}}
         </li>
         <li style="{{slots_style}}">{{closest_slot}}&nbsp;:
             {{#if closest_free_slot}}
-            <strong>{{closest_free_slot.data.name}}</strong> ({{closest_free_slot.distance}}&nbsp;m)
+            <strong>{{closest_free_slot.data.name}}</strong> ({{closest_free_slot.cycling.distance}}&nbsp;m - {{closest_free_slot.cycling.formatted_duration}})
             {{else}}
             {{no_slot}}
             {{/if}}

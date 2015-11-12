@@ -20,7 +20,19 @@ var VelomaggStation = ItemBackboneModel.extend({
 });
 
 var VelomaggCollection = Backbone.Collection.extend({
-  model: VelomaggStation
+  model: VelomaggStation,
+  closestStations: function closestStations(current_position) {
+    return this.models.map(function (model) {
+      var station = model.toJSON();
+      return {
+        data: station.data,
+        coordinates: model.coordinates(),
+        distance: current_position.distanceTo(model.coordinates()).toFixed(0)
+      };
+    }).sort(function (a, b) {
+      return a.distance - b.distance;
+    });
+  }
 });
 
 module.exports = VelomaggCollection;

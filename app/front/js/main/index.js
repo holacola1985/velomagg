@@ -38,7 +38,6 @@ L.mapbox.config.HTTPS_URL = 'https://api.tiles.mapbox.com/v4';
 
   function defineLocale(language) {
     let locale = language.substr(0, 2);
-    console.log(locale);
     return /(en|fr|de|es)/g.test(locale) ? locale : 'fr';
   }
 

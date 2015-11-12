@@ -9,6 +9,9 @@
     "closest_bike": "Rad am nähsten",
     "no_bike": "Kein Rad verfügbar :( versuchen Sie es mit rauszoomen...",
     "closest_slot": "Nähster Platz",
-    "no_slot": " Kein Platz verfügbar :( versuchen Sie es mit rauszoomen..."
+    "no_slot": "Kein Platz verfügbar :( versuchen Sie es mit rauszoomen...",
+    "hours": "%{hours}h ",
+    "minutes": "%{minutes}m ",
+    "seconds": "%{seconds}s"
   }
 }

@@ -46,6 +46,7 @@
     "lightstream-socket": "latest",
     "lodash": "^3.10.1",
     "lower-case": "^1.1.2",
+    "mapbox-directions-api": "^0.5.0",
     "mapbox-react": "latest",
     "mapbox.js": "^2.2.2",
     "node-polyglot": "^0.4.4",
