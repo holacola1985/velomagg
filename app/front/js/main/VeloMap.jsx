@@ -80,7 +80,7 @@ class VeloMap extends React.Component {
 
     return <Map map={this.props.map}>
       <MapboxLayer url="mapbox.emerald"/>
-      <Layer interactive>
+      <Layer interactive className="station-layer">
         <style type="text/css" dangerouslySetInnerHTML={dynamic_css} />
         {
           this.state.list.map((stations) => {

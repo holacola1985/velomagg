@@ -9,6 +9,9 @@
     "closest_bike": "Closest available bike",
     "no_bike": "no one nearby :( try to zoom out...",
     "closest_slot": "Closest free stand",
-    "no_slot": "no one nearby :( try to zoom out..."
+    "no_slot": "no one nearby :( try to zoom out...",
+    "hours": "%{hours}h ",
+    "minutes": "%{minutes}m ",
+    "seconds": "%{seconds}s"
   }
 }

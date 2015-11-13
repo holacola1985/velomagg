@@ -12,16 +12,8 @@ var ClosestStationsControl = L.Control.extend({
     this.container = L.DomUtil.create('div', 'leaflet-control-command');
     return this.container;
   },
-  update: function (stations, current_position) {
-    var closest_stations = closestStations(stations, current_position);
-    this._render({
-      closest_available_bike: closest_stations.filter(function (station) {
-        return station.data.available_bikes > 0;
-      })[0],
-      closest_free_slot: closest_stations.filter(function (station) {
-        return station.data.free_slots > 0;
-      })[0]
-    });
+  update: function (stations) {
+    this._render(stations);
   },
   _render: function (closest_stations) {
     closest_stations.bikes_style = 'color: ' + this.options.colors.bikes;
@@ -30,20 +22,31 @@ var ClosestStationsControl = L.Control.extend({
     closest_stations.no_bike = this.options.i18n.t('control.no_bike');
     closest_stations.closest_slot = this.options.i18n.t('control.closest_slot');
     closest_stations.no_slot = this.options.i18n.t('control.no_slot');
+    if (closest_stations.closest_available_bike.walking) {
+      closest_stations.closest_available_bike.walking.formatted_duration =
+        this._formatDuration(closest_stations.closest_available_bike.walking.duration);
+    }
+    if (closest_stations.closest_free_slot.cycling) {
+      closest_stations.closest_free_slot.cycling.formatted_duration =
+        this._formatDuration(closest_stations.closest_free_slot.cycling.duration);
+    }
     this.container.innerHTML = renderControl(closest_stations);
+  },
+  _formatDuration: function (duration) {
+    var seconds = duration % 60;
+    var minutes = (duration - seconds) / 60 % 60;
+    var hours = Math.floor(duration / 3600);
+
+    var formatted_duration = this.options.i18n.t('control.seconds', { seconds: seconds });
+    if (minutes) {
+      formatted_duration = this.options.i18n.t('control.minutes', { minutes: minutes }) + formatted_duration;
+    }
+    if (hours) {
+      formatted_duration = this.options.i18n.t('control.hours', { hours: hours }) + formatted_duration;
+    }
+
+    return formatted_duration;
   }
 });
-
-function closestStations(stations, current_position) {
-  return stations.models.map(function (model) {
-    var station = model.toJSON();
-    return {
-      data: station.data,
-      distance: current_position.distanceTo(model.coordinates()).toFixed(0)
-    };
-  }).sort(function (a, b) {
-    return a.distance - b.distance;
-  });
-}
 
 module.exports = ClosestStationsControl;

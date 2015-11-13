@@ -9,6 +9,9 @@
     "closest_bike": "bicicleta más cercano",
     "no_bike": "No hay bicicletas disponibles :( tratar de disminuir el zoom...",
     "closest_slot": "espacio más cercano",
-    "no_slot": "No hay espacios disponibles :( tratar de disminuir el zoom..."
+    "no_slot": "No hay espacios disponibles :( tratar de disminuir el zoom...",
+    "hours": "%{hours}h ",
+    "minutes": "%{minutes}m ",
+    "seconds": "%{seconds}s"
   }
 }

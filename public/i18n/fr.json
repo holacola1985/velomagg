@@ -9,6 +9,9 @@
     "closest_bike": "Vélo disponible le plus proche",
     "no_bike": "pas à proximité :( essayez de dézoomer...",
     "closest_slot": "Borne libre la plus proche",
-    "no_slot": "pas à proximité :( essayez de dézoomer..."
+    "no_slot": "pas à proximité :( essayez de dézoomer...",
+    "hours": "%{hours}h ",
+    "minutes": "%{minutes}m ",
+    "seconds": "%{seconds}s"
   }
 }
