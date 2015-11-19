@@ -68,10 +68,7 @@ MapFlow.prototype._openSocket = function _openSocket() {
   var socket = new MapboxSocket('ws://' + this.config.hostname + '/socket/', 'station', options);
 
   socket.on('opened', function () {
-    if (!this.map_attached) {
-      socket.attachMap(this.map);
-      this.map_attached = true;
-    }
+    socket.attachMap(this.map);
   }.bind(this));
 
   socket.on('new_items', function (station) {
